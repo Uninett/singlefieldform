@@ -1,0 +1,6 @@
+<form class="singlefield"
+      method="post"
+      action="{% url 'book-edit3' pk=object.pk fieldname=fieldname %}">
+    {{ form.get_field }}
+    <input type="submit" value="Save">
+</form>

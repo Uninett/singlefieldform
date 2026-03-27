@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block main %}
+    <form class="singlefield"
+          method="post"
+          action="{% url 'book-edit2' pk=object.pk fieldname=fieldname %}">
+        {{ form }}
+        <input type="submit" value="Save">
+    </form>
+{% endblock main %}

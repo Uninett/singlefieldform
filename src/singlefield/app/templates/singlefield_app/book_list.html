@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block main %}
+    <p>
+        <a href="{% url "book-new" %}">+ Add one!</a>
+    </p>
+    {% for object in object_list %}
+        <section>
+            <h2>{{ object.title }}</h2>
+            <dl>
+                <dt>Author</dt>
+                <dd>
+                    {{ object.author }}
+                </dd>
+                <dt>Year</dt>
+                <dd>
+                    {{ object.author }}
+                </dd>
+            </dl>
+            <section>
+                <dl>
+                    {% for key, value in object.misc.items %}
+                        <dt>{{ key }}</dt>
+                        <dd>
+                            {{ value }}
+                        </dd>
+                    {% endfor %}
+                </dl>
+            </section>
+            <p>
+                <a href="{% url "book-edit" pk=object.pk %}">Edit</a>
+                <a href="{% url "book-delete" pk=object.pk %}">Delete</a>
+            </p>
+        </section>
+    {% endfor %}
+{% endblock main %}

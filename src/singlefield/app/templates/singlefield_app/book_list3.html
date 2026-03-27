@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load app %}
+{% block main %}
+    <p>
+        <a href="{% url "book-new3" %}">+ Add one!</a>
+    </p>
+    {% for object in object_list %}
+        <section>
+            <h2>
+                {{ object.title }}
+                <button hx-get="{% url 'book-edit-field3' pk=object.pk fieldname='title' %}"
+                        hx-target="closest h2">Edit</button>
+            </h2>
+            <dl>
+                <dt>Author</dt>
+                <dd>
+                    {{ object.author }}
+                    <button hx-get="{% url 'book-edit-field3' pk=object.pk fieldname='author' %}"
+                            hx-target="closest dd">Edit</button>
+                </dd>
+                <dt>Year</dt>
+                <dd>
+                    {{ object.year }}
+                    <button hx-get="{% url 'book-edit-field3' pk=object.pk fieldname='year' %}"
+                            hx-target="closest dd">Edit</button>
+                </dd>
+            </dl>
+            <section>
+                <dl>
+                    {% for fieldname in misc %}
+                        <dt>{{ fieldname }}</dt>
+                        <dd>
+                            {% if fieldname in object.misc %}{{ object.misc|by_key:fieldname }}{% endif %}
+                            <button hx-get="{% url 'book-edit-field3' pk=object.pk fieldname=fieldname %}"
+                                    hx-target="closest dd">Edit</button>
+                        </dd>
+                    {% endfor %}
+                    {% for key, value in object.misc.items %}
+                        {% if not key in misc %}
+                            <dt>{{ key }}</dt>
+                            <dd>
+                                {{ value }}
+                            </dd>
+                        {% endif %}
+                    {% endfor %}
+                </dl>
+            </section>
+            <p>
+                <a href="{% url "book-delete3" pk=object.pk %}">Delete</a>
+            </p>
+        </section>
+    {% endfor %}
+{% endblock main %}
