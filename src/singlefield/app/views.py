@@ -40,6 +40,7 @@ class ConvenienceMixin(BreadcrumbMixin):
         )
 
     def get_misc_fields(self):
+        """Get fields that are not stored on a model"""
         misc = []
         for fieldname, form in get_forms().items():
             if form.json_backed:
@@ -50,6 +51,8 @@ class ConvenienceMixin(BreadcrumbMixin):
         if hasattr(self, 'success_url'):
             return reverse(self.success_url)
         return ''
+
+    # Way too easy to get lost without something like the below...
 
     def get_breadcrumbs(self):
         super().get_breadcrumbs()
@@ -77,6 +80,9 @@ class HTMxSingleFieldMixin:
     success_url = 'book-list3'
 
 
+# list views, detail views skipped
+
+
 class ListBookView(ClassicMixin, ConvenienceMixin, ListView):
     model = Book
 
@@ -88,6 +94,9 @@ class SinglefieldListBookView(SingleFieldMixin, ConvenienceMixin, ListView):
 
 class HTMxSinglefieldListBookView(HTMxSingleFieldMixin, SinglefieldListBookView):
     template_name = 'singlefield_app/book_list3.html'
+
+
+# create views
 
 
 class CreateBookView(ClassicMixin, ConvenienceMixin, CreateView):
@@ -126,6 +135,9 @@ class HTMxSinglefieldCreateBookView(HTMxSingleFieldMixin, SinglefieldCreateBookV
         return self.add_final_breadcrumb(breadcrumb)
 
 
+# delete views
+
+
 class DeleteBookView(ClassicMixin, ConvenienceMixin, DeleteView):
     model = Book
 
@@ -156,6 +168,9 @@ class HTMxSinglefieldDeleteBookView(HTMxSingleFieldMixin, SinglefieldDeleteBookV
             'Delete',
         )
         return self.add_final_breadcrumb(breadcrumb)
+
+
+# update views
 
 
 class UpdateBookView(ClassicMixin, ConvenienceMixin, UpdateView):
@@ -222,6 +237,9 @@ class HTMxSinglefieldUpdateBookView(HTMxSingleFieldMixin, SinglefieldUpdateBookV
         return self.add_final_breadcrumb(breadcrumb)
 
 
+# the magic extra views for rendering the field template
+
+
 class SinglefieldGetBookFieldView(SingleFieldMixin, DetailView):
     model = Book
     template_name = 'singlefield_app/book_field_form.html'
@@ -229,12 +247,6 @@ class SinglefieldGetBookFieldView(SingleFieldMixin, DetailView):
     def get_forms(self):
         instance = self.get_object()
         return get_forms(data=request.POST, obj=instance)
-
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
-
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         forms = get_forms(obj=self.object)
