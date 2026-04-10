@@ -46,11 +46,8 @@ class BookYearForm(SingleFieldFormMixin, forms.ModelForm):
         fields = ['year']
 
 
-class TriviaForm(SingleFieldFormMixin, forms.Form):
-    fieldname = "trivia"
+class JSONBackedMixin:
     json_backed = True
-
-    trivia = forms.CharField(widget=forms.Textarea)
 
     def __init__(self, instance=None, **kwargs):
         self.instance = instance
@@ -59,13 +56,16 @@ class TriviaForm(SingleFieldFormMixin, forms.Form):
             if value:
                 kwargs['initial'] = {self.fieldname: value}
 
-#         value = getattr(self.instance.misc, self.fieldname, '')
-#         if value:
-#             kwargs['initial'] = {'misc': self.instance.misc}
-#                 kwargs.get('initial', {iself.fieldname: value})
         super().__init__(**kwargs)
 
     def save(self, **_):
         if self.is_valid():
             self.instance.misc[self.fieldname] = self.cleaned_data[self.fieldname]
             self.instance.save()
+
+
+class TriviaForm(JSONBackedMixin, SingleFieldFormMixin, forms.Form):
+    fieldname = "trivia"
+    json_backed = True
+
+    trivia = forms.CharField(widget=forms.Textarea, required=False)
