@@ -22,7 +22,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'django.forms',
 
-    'django_htmx',
     'singlefield.app',
 ]
 
