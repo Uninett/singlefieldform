@@ -26,24 +26,27 @@
                 </dd>
             </dl>
             <section>
-                <dl>
-                    {% for fieldname in misc %}
-                        <dt>{{ fieldname }}</dt>
-                        <dd>
-                            {% if fieldname in object.misc %}{{ object.misc|by_key:fieldname }}{% endif %}
-                            <button hx-get="{% url 'book-edit-field3' pk=object.pk fieldname=fieldname %}"
-                                    hx-target="closest dd">Edit</button>
-                        </dd>
-                    {% endfor %}
-                    {% for key, value in object.misc.items %}
-                        {% if not key in misc %}
-                            <dt>{{ key }}</dt>
+                <fieldset>
+                    <legend>Stored as JSON</legend>
+                    <dl>
+                        {% for fieldname in misc %}
+                            <dt>{{ fieldname.title }}</dt>
                             <dd>
-                                {{ value }}
+                                {% if fieldname in object.misc %}{{ object.misc|by_key:fieldname|default_if_none:"–" }}{% endif %}
+                                <button hx-get="{% url 'book-edit-field3' pk=object.pk fieldname=fieldname %}"
+                                        hx-target="closest dd">Edit</button>
                             </dd>
-                        {% endif %}
-                    {% endfor %}
-                </dl>
+                        {% endfor %}
+                        {% for key, value in object.misc.items %}
+                            {% if not key in misc %}
+                                <dt>{{ key }}</dt>
+                                <dd>
+                                    {{ value|default_if_none:"–" }}
+                                </dd>
+                            {% endif %}
+                        {% endfor %}
+                    </dl>
+                </fieldset>
             </section>
             <p>
                 <a href="{% url "book-delete3" pk=object.pk %}">Delete</a>

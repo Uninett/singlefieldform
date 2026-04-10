@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load app %}
 {% block main %}
     <p>
         <a href="{% url "book-new" %}">+ Add one!</a>
@@ -17,19 +18,33 @@
                 </dd>
             </dl>
             <section>
-                <dl>
+                <fieldset>
+                    <legend>Stored as JSON</legend>
+                    {% for fieldname in misc %}
+                        {% if fieldname in object.misc %}
+                            {% with object.misc|by_key:fieldname as value %}
+                                <dt>{{ fieldname.title }}</dt>
+                                <dd>
+                                    {{ value|default_if_none:"–" }}
+                                </dd>
+                            {% endwith %}
+                        {% endif %}
+                    {% endfor %}
                     {% for key, value in object.misc.items %}
-                        <dt>{{ key }}</dt>
-                        <dd>
-                            {{ value }}
-                        </dd>
+                        {% if not key in misc %}
+                            <dt>{{ key }}</dt>
+                            <dd>
+                                {{ value|default_if_none:"–" }}
+                            </dd>
+                        {% endif %}
                     {% endfor %}
                 </dl>
             </section>
-            <p>
-                <a href="{% url "book-edit" pk=object.pk %}">Edit</a>
-                <a href="{% url "book-delete" pk=object.pk %}">Delete</a>
-            </p>
-        </section>
-    {% endfor %}
+        </fieldset>
+        <p>
+            <a href="{% url "book-edit" pk=object.pk %}">Edit</a>
+            <a href="{% url "book-delete" pk=object.pk %}">Delete</a>
+        </p>
+    </section>
+{% endfor %}
 {% endblock main %}
