@@ -1,0 +1,1222 @@
+<html>
+    <head>
+        <title>Django forms in the age of HTMx: The single field form</title>
+        <style>
+* {
+  box-sizing: border-box;
+
+  --sikt-logo-dark-color: #09021F;
+
+  --sikt-text-color: #ffffff;
+  --sikt-background-color: #0E0034;
+
+  --light-text-color: black;
+  --light-background-color: white;
+
+  --header-size: 3rem;
+}
+body {
+  margin: 0;
+  font-size: 1.5rem;
+}
+main {
+  height: 2300vh;
+}
+.darkmode {
+  --text-color: var(--sikt-text-color);
+  --background-color: var(--sikt-background-color);
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+.lightmode {
+  --text-color: var(--light-text-color);
+  --background-color: var(--light-background-color);
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+.lightmode #sikt-logo {
+  stroke: var(--sikt-logo-dark-color);
+  fill: var(--sikt-logo-dark-color);
+}
+#geant-logo {
+  stroke: none;
+}
+.illustration {
+  justify-content: center;
+}
+.highlight {
+  font-weight: bold;
+  color: var(--background-color);
+  background-color: var(--text-color);
+  padding: 0.25ex;
+}
+.illustration svg {
+  margin: auto;
+  justify-content: space-evenly;
+  stroke: var(--text-color);
+  fill: var(--text-color);
+}
+pre {
+  margin: 0;
+}
+svg, img {
+  width: 75%;
+  max-width: 95%;
+  max-height: 90%;
+  height: auto;
+  stroke: var(--text-color);
+  fill: var(--text-color);
+}
+main section {
+  height: 100vh;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  break-after: always;
+}
+div.horizontal {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+nav {
+    height: 100%;
+    width: 10%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+nav > div {
+    height: 50%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+.slide {
+  padding-bottom: 1em;
+  padding-top: 1em;
+    height: 100%;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+}
+a.controls {
+    display: block;
+    height: 100%;
+    width: 100%;
+    text-decoration: none;
+    color: var(--background-color);
+}
+h2 {
+    font-size: var(--header-size);
+}
+h1, h2 {
+    align-self: center;
+    text-align: center;
+}
+p { text-align: left; }
+section:first-of-type .slide {
+  justify-content: space-evenly;
+}
+section:last-of-type .logos {
+  display: flex;
+  flex-direction: row;
+  gap: 2em;
+  justify-content: space-evenly;
+  align-items: flex-end;
+}
+.logo {
+  width: 20vw;
+  height: auto;
+}
+.huge {
+    font-size: 5rem;
+}
+.code {
+    font-size: 2rem;
+}
+.center {
+  align-self: center;
+  text-align: center;
+  margin: auto;
+}
+a {
+    color: var(--text-color);
+    font-weight: bold;
+}
+ul, ol {
+  list-style-position: inside;
+  padding-left: 0;
+}
+dl {
+  display: grid;
+  grid-template-columns: max-content auto; /* repeat(2, minmax(0, 1fr));*/
+}
+@media (max-width: 1500px) {
+  body {
+    font-size: 1.2rem;
+  }
+}
+@media print
+{
+    nav
+    {
+        display: none !important;
+    }
+}
+        </style>
+    </head>
+    <body class="lightmode">
+        <main>
+            <section id="slide1">
+                <nav>
+                    <div class="prev"></div>
+                    <div class="first"></div>
+                </nav>
+                <div class="slide">
+                    <h1>
+                        Django forms in the age of HTMx:
+                        <br>
+                        <span class="huge">The single field form</span>
+                    </h1>
+                    <div>
+                        <p class="center">Hanne Moa</p>
+                        <p class="center">DjangoCon EU 2026</p>
+                    </div>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide2">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Last</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide2">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide1">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide">
+                    <div>
+                        <h2>Who am I?</h2>
+                        <ul>
+                            <li>Hanne Moa. Some websites consider my name to be too short</li>
+                            <li>aka. hm, hmpf, harrumpf</li>
+                            <li>
+                                Developer @ Sikt (Norway's <a href="https://en.wikipedia.org/wiki/National_research_and_education_network">NREN</a>, formerly known as Uninett)
+                            </li>
+                            <li>Open source all the way and All! the! Things! since the nineties</li>
+                            <li>hanne.moa@sikt.no, working hours, central European time</li>
+                            <li>
+                                No <em>professional</em> presence in social media, by choice
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide3">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Last</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide3">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide2">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide">
+                    <div>
+                        <h2>Overview</h2>
+                        <ul>
+                            <li>
+                                <a href="#slide4">Horrors of the past</a>
+                            </li>
+                            <li>
+                                <a href="#slide14">Introduction to single field forms</a>
+                            </li>
+                            <li>
+                                <a href="#slide18">Demo</a>
+                            </li>
+                            <li>
+                                <a href="#slide19">The magic</a>
+                            </li>
+                            <li>
+                                <a href="#slide20">Bonus x 2, if time permits (more magic!)</a>
+                            </li>
+                            <li>
+                                <a href="#slide22">Links galore</a>
+                            </li>
+                            <li>
+                                <a href="#slide-end">That mandated slide with all the logos</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide4">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Last</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide4">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide3">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide illustration">
+                    <svg viewBox="0 0 26.1 13.400002"
+                         version="1.1"
+                         id="svg7685"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:svg="http://www.w3.org/2000/svg">
+                        <defs id="defs7682" />
+                        <g id="layer1" transform="translate(-108.41056,-81.214312)">
+                        <g id="g2642" transform="translate(83.360565,43.464314)">
+                        <rect style="fill:none;fill-rule:evenodd;stroke-width:0.7;stroke-dasharray:none;stroke-opacity:1" id="rect236" width="25.4" height="12.700002" x="25.4" y="38.099998" />
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.264583" x="38.099998" y="46.566666" id="text846"><tspan id="tspan844" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583" x="38.099998" y="46.566666">Form</tspan></text>
+                        </g>
+                        </g>
+                    </svg>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide5">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Last</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide5">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide4">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide illustration">
+                    <svg viewBox="0 0 106.19714 16.406902"
+                         version="1.1"
+                         id="svg8772"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:svg="http://www.w3.org/2000/svg">
+                        <defs id="defs8769" />
+                        <g id="layer1" transform="translate(-30.767061,-78.264903)">
+                        <g id="g2637" transform="translate(12.080864,-10.285096)">
+                        <g id="g890-1" transform="translate(5.7220458e-7,50.800002)" style="stroke-width:0.7;stroke-dasharray:none">
+                        <rect style="fill:none;fill-rule:evenodd;stroke-width:0.7;stroke-dasharray:none;stroke-opacity:1" id="rect236-0" width="25.4" height="12.700002" x="25.4" y="38.099998" />
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.7;stroke-dasharray:none" x="38.099998" y="46.566666" id="text846-6"><tspan id="tspan844-3" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.7;stroke-dasharray:none" x="38.099998" y="46.566666">Form</tspan></text>
+                        </g>
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.264583" x="52.916668" y="103.71667" id="text659"><tspan id="tspan657" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583" x="52.916668" y="103.71667">,</tspan></text>
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.264583" x="86.783333" y="103.71667" id="text659-8"><tspan id="tspan657-4" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583" x="86.783333" y="103.71667">,</tspan></text>
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.264583" x="21.166666" y="101.6" id="text828"><tspan id="tspan826" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583" x="21.166666" y="101.6">[</tspan></text>
+                        <g id="g890-2" transform="translate(33.866668,50.800001)" style="stroke-width:0.7;stroke-dasharray:none">
+                        <rect style="fill:none;fill-rule:evenodd;stroke-width:0.7;stroke-dasharray:none;stroke-opacity:1" id="rect236-06" width="25.4" height="12.700002" x="25.4" y="38.099998" />
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.7;stroke-dasharray:none" x="38.099998" y="46.566666" id="text846-1"><tspan id="tspan844-5" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.7;stroke-dasharray:none" x="38.099998" y="46.566666">Form</tspan></text>
+                        </g>
+                        <g id="g890-5" transform="translate(67.733334,50.800001)" style="stroke-width:0.7;stroke-dasharray:none">
+                        <rect style="fill:none;fill-rule:evenodd;stroke-width:0.7;stroke-dasharray:none;stroke-opacity:1" id="rect236-4" width="25.4" height="12.700002" x="25.4" y="38.099998" />
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.7;stroke-dasharray:none" x="38.099998" y="46.566666" id="text846-7"><tspan id="tspan844-6" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.7;stroke-dasharray:none" x="38.099998" y="46.566666">Form</tspan></text>
+                        </g>
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.264583" x="122.40286" y="101.6" id="text1180"><tspan id="tspan1178" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583" x="122.40286" y="101.6">]</tspan></text>
+                        </g>
+                        </g>
+                    </svg>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide6">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Last</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide6">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide5">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide illustration">
+                    <svg viewBox="0 0 115 36.683331"
+                         version="1.1"
+                         id="svg10099"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:svg="http://www.w3.org/2000/svg">
+                        <defs id="defs10096" />
+                        <g id="layer1" transform="translate(-39.957642,-79.405171)">
+                        <g id="g2922" transform="translate(25.490975,-34.544832)">
+                        <g id="g1202-6" transform="translate(1.9073486e-7,40.216666)" style="stroke-width:0.7;stroke-dasharray:none">
+                        <g id="g890-1-9" transform="translate(5.7220458e-7,50.800002)" style="stroke-width:0.7;stroke-dasharray:none">
+                        <rect style="fill:none;fill-rule:evenodd;stroke-width:0.7;stroke-dasharray:none;stroke-opacity:1" id="rect236-0-3" width="25.4" height="12.700002" x="25.4" y="38.099998" />
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.7;stroke-dasharray:none" x="38.099998" y="46.566666" id="text846-6-7"><tspan id="tspan844-3-4" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.7;stroke-dasharray:none;" x="38.099998" y="46.566666">Form</tspan></text>
+                        </g>
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.7;stroke-dasharray:none" x="52.916668" y="103.71667" id="text659-5"><tspan id="tspan657-2" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.7;stroke-dasharray:none;" x="52.916668" y="103.71667">,</tspan></text>
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.7;stroke-dasharray:none" x="86.783333" y="103.71667" id="text659-8-5"><tspan id="tspan657-4-4" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.7;stroke-dasharray:none;" x="86.783333" y="103.71667">,</tspan></text>
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.7;stroke-dasharray:none" x="21.166666" y="101.6" id="text828-7"><tspan id="tspan826-4" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.7;stroke-dasharray:none;" x="21.166666" y="101.6">[</tspan></text>
+                        <g id="g890-2-4" transform="translate(33.866668,50.800001)" style="stroke-width:0.7;stroke-dasharray:none">
+                        <rect style="fill:none;fill-rule:evenodd;stroke-width:0.7;stroke-dasharray:none;stroke-opacity:1" id="rect236-06-3" width="25.4" height="12.700002" x="25.4" y="38.099998" />
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.7;stroke-dasharray:none" x="38.099998" y="46.566666" id="text846-1-0"><tspan id="tspan844-5-7" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.7;stroke-dasharray:none;" x="38.099998" y="46.566666">Form</tspan></text>
+                        </g>
+                        <g id="g890-5-8" transform="translate(67.733334,50.800001)" style="stroke-width:0.7;stroke-dasharray:none">
+                        <rect style="fill:none;fill-rule:evenodd;stroke-width:0.7;stroke-dasharray:none;stroke-opacity:1" id="rect236-4-6" width="25.4" height="12.700002" x="25.4" y="38.099998" />
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.7;stroke-dasharray:none" x="38.099998" y="46.566666" id="text846-7-8"><tspan id="tspan844-6-8" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.7;stroke-dasharray:none;" x="38.099998" y="46.566666">Form</tspan></text>
+                        </g>
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.7;stroke-dasharray:none" x="122.40286" y="101.6" id="text1180-4"><tspan id="tspan1178-3" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.7;stroke-dasharray:none;" x="122.40286" y="101.6">]</tspan></text>
+                        </g>
+                        <rect style="fill:none;fill-rule:evenodd;stroke-width:0.7;stroke-dasharray:none;stroke-opacity:1" id="rect1953" width="114.3" height="35.98333" x="14.816667" y="114.3" />
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.7;stroke-dasharray:none" x="27.516666" y="122.76667" id="text2511"><tspan id="tspan2509" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.7;stroke-dasharray:none;" x="27.516666" y="122.76667">Form</tspan></text>
+                        </g>
+                        </g>
+                    </svg>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide7">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Last</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide7">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide6">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide illustration">
+                    <svg style="width: 40%"
+                         viewBox="0 0 34.566666 34.566666"
+                         version="1.1"
+                         id="svg10761"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:svg="http://www.w3.org/2000/svg">
+                        <defs id="defs10758" />
+                        <g id="layer1" transform="translate(-45.182101,-109.67188)">
+                        <g id="g2929" transform="translate(28.598769,-55.07813)">
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;;fill-opacity:1;stroke:none;stroke-width:0.264583" x="18.686197" y="192.31902" id="text2646"><tspan id="tspan2648" x="18.686197" y="192.31902">[…]</tspan></text>
+                        <rect style="fill:none;fill-rule:evenodd;;stroke-width:0.7;stroke-dasharray:none;stroke-opacity:1" id="rect236-49" width="33.866665" height="33.866665" x="16.933332" y="165.10001" />
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;;fill-opacity:1;stroke:none;stroke-width:0.264583" x="29.633335" y="173.56667" id="text846-2"><tspan id="tspan844-0" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583" x="29.633335" y="173.56667">Form</tspan></text>
+                        </g>
+                        </g>
+                    </svg>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide8">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Last</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide8">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide7">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide illustration">
+                    <svg viewBox="0 0 43.046886 53.630222"
+                         version="1.1"
+                         id="svg11272"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:svg="http://www.w3.org/2000/svg">
+                        <defs id="defs11269" />
+                        <g id="layer1" transform="translate(-72.463898,-81.053433)">
+                        <g id="g7013" transform="translate(62.237342,-117.67492)">
+                        <g id="g4674" transform="translate(-55.033341,-10.583335)">
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill-opacity:1;stroke:none;stroke-width:0.264583" x="71.602867" y="251.58568" id="text2646-8"><tspan id="tspan2648-9" x="71.602867" y="251.58568">[…]</tspan></text>
+                        <rect style="fill:none;fill-rule:evenodd;stroke-width:0.7;stroke-dasharray:none;stroke-opacity:1" id="rect236-49-2" width="33.866665" height="33.866665" x="69.850006" y="224.36667" />
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.264583" x="82.550003" y="232.83333" id="text846-2-6"><tspan id="tspan844-0-6" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583" x="82.550003" y="232.83333">Form</tspan></text>
+                        </g>
+                        <path id="path4796" style="fill:none;stroke-width:0.713554;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1" d="m 21.707837,199.08446 v 11.52769 z M 10.68305,210.28034 h 11.374646 m -0.340159,-11.19521 -11.134204,11.1342 v 41.78247 h 42.333334 v -52.91667 z" />
+                        </g>
+                        </g>
+                    </svg>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide9">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Last</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide9">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide8">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide illustration">
+                    <svg viewBox="0 0 43.046886 53.630222"
+                         version="1.1"
+                         id="svg11272"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:svg="http://www.w3.org/2000/svg">
+                        <defs id="defs11269" />
+                        <g id="layer1" transform="translate(-72.463898,-81.053433)">
+                        <g id="g7013" transform="translate(62.237342,-117.67492)">
+                        <g id="g4674" transform="translate(-55.033341,-10.583335)">
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill-opacity:1;stroke:none;stroke-width:0.264583" x="71.602867" y="251.58568" id="text2646-8"><tspan id="tspan2648-9" x="71.602867" y="251.58568">[…]</tspan></text>
+                        <rect style="fill:none;fill-rule:evenodd;stroke-width:0.7;stroke-dasharray:none;stroke-opacity:1" id="rect236-49-2" width="33.866665" height="33.866665" x="69.850006" y="224.36667" />
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.264583" x="82.550003" y="232.83333" id="text846-2-6"><tspan id="tspan844-0-6" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583" x="82.550003" y="232.83333">Form</tspan></text>
+                        </g>
+                        <path id="path4796" style="fill:none;stroke-width:0.713554;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1" d="m 21.707837,199.08446 v 11.52769 z M 10.68305,210.28034 h 11.374646 m -0.340159,-11.19521 -11.134204,11.1342 v 41.78247 h 42.333334 v -52.91667 z" />
+                        </g>
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill-opacity:1;stroke:none;stroke-width:0.264583" x="96.509155" y="90.664436" id="text11572"><tspan id="tspan11570" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;stroke-width:0.264583" x="96.509155" y="90.664436">1</tspan></text>
+                        </g>
+                    </svg>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide10">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Last</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide10">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide9">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide illustration">
+                    <svg viewBox="0 0 59.973442 60.065781"
+                         version="1.1"
+                         id="svg15251"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:svg="http://www.w3.org/2000/svg">
+                        <defs id="defs15248" />
+                        <g id="layer1" transform="translate(-57.349209,-85.64384)">
+                        <g id="g13947" transform="translate(53.472651,-104.53229)">
+                        <path id="path13285-5" style="fill:none;stroke-width:0.7;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1" d="m 32.543752,190.52613 0.02111,3.13582 m -0.263988,-3.13582 -3.175,3.175 H 55.03334 V 243.4428 H 63.5 v -52.91667 z m -8.223795,3.14887 0.02111,3.13582 m -0.263988,-3.13582 -3.175,3.175 h 25.907466 v 49.74167 h 8.46666 V 193.675 Z" />
+                        <g id="g12345-1" transform="translate(-42.690109,84.428352)">
+                        <g id="g7013-7-0" transform="translate(36.340111,-86.54502)">
+                        <g id="g4674-1-6" transform="translate(-55.033341,-10.583335)">
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill-opacity:1;stroke:none;stroke-width:0.264583" x="71.602867" y="251.58568" id="text2646-8-7-1"><tspan id="tspan2648-9-2-5" x="71.602867" y="251.58568">[…]</tspan></text>
+                        <rect style="fill:none;fill-rule:evenodd;stroke-width:0.7;stroke-dasharray:none;stroke-opacity:1" id="rect236-49-2-7-9" width="33.866665" height="33.866665" x="69.850006" y="224.36667" />
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.264583" x="82.550003" y="232.83333" id="text846-2-6-2-4"><tspan id="tspan844-0-6-2-9" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583" x="82.550003" y="232.83333">Form</tspan></text>
+                        </g>
+                        <path id="path4796-6-0" style="fill:none;stroke-width:0.713554;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1" d="m 21.707837,199.08446 v 11.52769 z M 10.68305,210.28034 h 11.374646 m -0.340159,-11.19521 -11.134204,11.1342 v 41.78247 h 42.333334 v -52.91667 z" />
+                        </g>
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill-opacity:1;stroke:none;stroke-width:0.264583" x="70.611923" y="121.79433" id="text11572-9"><tspan id="tspan11570-1" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;stroke-width:0.264583" x="70.611923" y="121.79433">1</tspan></text>
+                        </g>
+                        </g>
+                        </g>
+                    </svg>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide11">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Last</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide11">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide10">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide illustration">
+                    <svg viewBox="0 0 82.033104 82.033104"
+                         version="1.1"
+                         id="svg16625"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:svg="http://www.w3.org/2000/svg">
+                        <defs id="defs16622" />
+                        <g id="g14723" transform="translate(-77.516781,-177.25316)">
+                        <g id="g14699" transform="translate(85.022396,-0.28919182)">
+                        <path id="path14675" style="fill:none;stroke-width:0.7;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1" d="m 32.543752,190.52613 0.02111,3.13582 m -0.263988,-3.13582 -3.175,3.175 H 55.03334 V 243.4428 H 63.5 v -52.91667 z m -8.223795,3.14887 0.02111,3.13582 m -0.263988,-3.13582 -3.175,3.175 h 25.907466 v 49.74167 h 8.46666 V 193.675 Z" />
+                        <g id="g14697" transform="translate(-42.690109,84.428352)">
+                        <g id="g14691" transform="translate(36.340111,-86.54502)">
+                        <g id="g14687" transform="translate(-55.033341,-10.583335)">
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill-opacity:1;stroke:none;stroke-width:0.264583" x="71.602867" y="251.58568" id="text14679"><tspan id="tspan14677" x="71.602867" y="251.58568">[…]</tspan></text>
+                        <rect style="fill:none;fill-rule:evenodd;stroke-width:0.7;stroke-dasharray:none;stroke-opacity:1" id="rect14681" width="33.866665" height="33.866665" x="69.850006" y="224.36667" />
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.264583" x="82.550003" y="232.83333" id="text14685"><tspan id="tspan14683" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583" x="82.550003" y="232.83333">Form</tspan></text>
+                        </g>
+                        <path id="path14689" style="fill:none;stroke-width:0.713554;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1" d="m 21.707837,199.08446 v 11.52769 z M 10.68305,210.28034 h 11.374646 m -0.340159,-11.19521 -11.134204,11.1342 v 41.78247 h 42.333334 v -52.91667 z" />
+                        </g>
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill-opacity:1;stroke:none;stroke-width:0.264583" x="70.611923" y="121.79433" id="text14695"><tspan id="tspan14693" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;stroke-width:0.264583" x="70.611923" y="121.79433">1</tspan></text>
+                        </g>
+                        </g>
+                        <rect style="fill:none;fill-rule:evenodd;stroke-width:0.7;stroke-dasharray:none;stroke-opacity:1" id="rect14701" width="67.733337" height="74.083344" x="84.666664" y="179.91667" />
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.264583" x="97.366669" y="188.38333" id="text14705"><tspan id="tspan14703" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583" x="97.366669" y="188.38333">Form</tspan></text>
+                        </g>
+                    </svg>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide12">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Last</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide12">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide11">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide illustration">
+                    <svg viewBox="0 0 82.033104 82.033104"
+                         version="1.1"
+                         id="svg16625"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:svg="http://www.w3.org/2000/svg">
+                        <defs id="defs16622" />
+                        <g id="layer1" transform="translate(-55.573516,-51.679427)">
+                        <g id="g14723" transform="translate(-21.943265,-125.57373)">
+                        <g id="g14699" transform="translate(85.022396,-0.28919182)">
+                        <path id="path14675" style="fill:none;stroke-width:0.7;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1" d="m 32.543752,190.52613 0.02111,3.13582 m -0.263988,-3.13582 -3.175,3.175 H 55.03334 V 243.4428 H 63.5 v -52.91667 z m -8.223795,3.14887 0.02111,3.13582 m -0.263988,-3.13582 -3.175,3.175 h 25.907466 v 49.74167 h 8.46666 V 193.675 Z" />
+                        <g id="g14697" transform="translate(-42.690109,84.428352)">
+                        <g id="g14691" transform="translate(36.340111,-86.54502)">
+                        <g id="g14687" transform="translate(-55.033341,-10.583335)">
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill-opacity:1;stroke:none;stroke-width:0.264583" x="71.602867" y="251.58568" id="text14679"><tspan id="tspan14677" x="71.602867" y="251.58568">[…]</tspan></text>
+                        <rect style="fill:none;fill-rule:evenodd;stroke-width:0.7;stroke-dasharray:none;stroke-opacity:1" id="rect14681" width="33.866665" height="33.866665" x="69.850006" y="224.36667" />
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.264583" x="82.550003" y="232.83333" id="text14685"><tspan id="tspan14683" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583" x="82.550003" y="232.83333">Form</tspan></text>
+                        </g>
+                        <path id="path14689" style="fill:none;stroke-width:0.713554;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1" d="m 21.707837,199.08446 v 11.52769 z M 10.68305,210.28034 h 11.374646 m -0.340159,-11.19521 -11.134204,11.1342 v 41.78247 h 42.333334 v -52.91667 z" />
+                        </g>
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill-opacity:1;stroke:none;stroke-width:0.264583" x="70.611923" y="121.79433" id="text14695"><tspan id="tspan14693" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;stroke-width:0.264583" x="70.611923" y="121.79433">1</tspan></text>
+                        </g>
+                        </g>
+                        <rect style="fill:none;fill-rule:evenodd;stroke-width:0.7;stroke-dasharray:none;stroke-opacity:1" id="rect14701" width="67.733337" height="74.083344" x="84.666664" y="179.91667" />
+                        <text xml:space="preserve" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;line-height:1.25;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill-opacity:1;stroke:none;stroke-width:0.264583" x="97.366669" y="188.38333" id="text14705"><tspan id="tspan14703" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.2889px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583" x="97.366669" y="188.38333">Form</tspan></text>
+                        </g>
+                        <path id="path19490" style="fill:none;fill-opacity:1;stroke:#ff0000;stroke-width:8;stroke-linecap:square;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1" d="M 72.414133,69.334437 118.57129,115.4916 M 133.60662,92.695977 A 37.016552,37.016552 0 0 1 96.590068,129.71253 37.016552,37.016552 0 0 1 59.573516,92.695977 37.016552,37.016552 0 0 1 96.590068,55.679427 37.016552,37.016552 0 0 1 133.60662,92.695977 Z" />
+                        </g>
+                    </svg>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide13">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Last</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide13">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide12">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide illustration">
+                    <svg version="1.1"
+                         viewBox="0 0 482.94598 581"
+                         id="svg22597"
+                         xmlns="http://www.w3.org/2000/svg"
+                         xmlns:svg="http://www.w3.org/2000/svg">
+                        <g data-cell-id="2x3FeHkugDyZedHAMUo6-4" id="g22395" transform="translate(-0.55401242,0.5)">
+                        <rect x="363" y="260" width="120" height="60" fill="none"; pointer-events="all" id="rect22383" />
+                        <text x="423" y="294" font-family="Helvetica" font-size="12px" text-anchor="middle" id="text22387" style="-inkscape-font-specification:'Classic Console, Normal';font-family:'Classic Console';font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:26.6667px;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-anchor:middle">Question</text>
+                        </g>
+                        <g id="g22343" transform="translate(-0.55401242,0.5)">
+                        <ellipse cx="243" cy="40" rx="60" ry="40" fill="none" pointer-events="all" id="ellipse22341" />
+                        <text x="243" y="44" font-family="Helvetica" font-size="12px" text-anchor="middle" id="text22345" style="-inkscape-font-specification:'Classic Console, Normal';font-family:'Classic Console';font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:26.6667px;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-anchor:middle">Start</text>
+                        </g>
+                        <g data-cell-id="2x3FeHkugDyZedHAMUo6-4" id="g22395-3" transform="translate(-180.55401,0.5)">
+                        <rect x="363" y="260" width="120" height="60" fill="none" pointer-events="all" id="rect22383-0" />
+                        <text x="423" y="294" font-family="Helvetica" font-size="12px" text-anchor="middle" id="text22387-4" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.6667px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-anchor:middle">Question</text>
+                        </g>
+                        <g id="g22401" transform="translate(-0.55401242,0.5)">
+                        <path d="M 183,170 68.09,256.18" fill="none" stroke-miterlimit="10" pointer-events="stroke" id="path22397" />
+                        <path d="m 63.89,259.33 3.5,-7 0.7,3.85 3.5,1.75 z" stroke-miterlimit="10" pointer-events="all" id="path22399" />
+                        <text x="132" y="212" font-family="Helvetica" font-size="11px" text-anchor="middle" id="text22403">Yes</text>
+                        </g>
+                        <g id="g22419" transform="translate(-0.55401242,0.5)">
+                        <path d="m 303,170 114.91,86.18" fill="none" stroke-miterlimit="10" pointer-events="stroke" id="path22415" />
+                        <path d="m 422.11,259.33 -7.7,-1.4 3.5,-1.75 0.7,-3.85 z" stroke-miterlimit="10" pointer-events="all" id="path22417" />
+                        <text x="357" y="216" font-family="Helvetica" font-size="11px" text-anchor="middle" id="text22421">For tax purposes only</text>
+                        </g>
+                        <g id="g22451" transform="translate(-0.55401242,0.5)">
+                        <path d="m 243,200 v 53.63" fill="none" stroke-miterlimit="10" pointer-events="stroke" id="path22447" />
+                        <path d="m 243,258.88 -3.5,-7 3.5,1.75 3.5,-1.75 z" stroke-miterlimit="10" pointer-events="all" id="path22449" />
+                        <text x="242" y="234" font-family="Helvetica" font-size="11px" text-anchor="middle" id="text22453">No</text>
+                        </g>
+                        <g id="g22495" transform="translate(-0.55401242,0.5)">
+                        <ellipse cx="243" cy="540" rx="60" ry="40" fill="none" pointer-events="all" id="ellipse22493" />
+                        <text x="243" y="544" font-family="Helvetica" font-size="12px" text-anchor="middle" id="text22497" style="-inkscape-font-specification:'Classic Console, Normal';font-family:'Classic Console';font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:26.6667px;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-anchor:middle">End</text>
+                        </g>
+                        <g data-cell-id="2x3FeHkugDyZedHAMUo6-19" id="g22513" transform="translate(-0.55401242,0.5)">
+                        <g id="g22511">
+                        <path d="m 243,80 v 53.63" fill="none" stroke-miterlimit="10" pointer-events="stroke" id="path22507" />
+                        <path d="m 243,138.88 -3.5,-7 3.5,1.75 3.5,-1.75 z" stroke-miterlimit="10" pointer-events="all" id="path22509" />
+                        </g>
+                        </g>
+                        <g id="g22519" transform="translate(-0.55401242,0.5)">
+                        <path d="m 63,320 v 53.63" fill="none" stroke-miterlimit="10" pointer-events="stroke" id="path22515" />
+                        <path d="m 63,378.88 -3.5,-7 3.5,1.75 3.5,-1.75 z" stroke-miterlimit="10" pointer-events="all" id="path22517" />
+                        <text x="62" y="354" font-family="Helvetica" font-size="11px" text-anchor="middle" id="text22521">Captain, it's only Tuesday</text>
+                        </g>
+                        <g id="g22537" style="stroke-width:0.983223" transform="matrix(1.0281051,0,0,1.0061407,-4.8674014,-2.3168008)">
+                        <path d="m 123,320 55.5,55.5" fill="none" stroke-miterlimit="10" pointer-events="stroke" id="path22533" style="stroke-width:0.96925" />
+                        <path d="m 182.21,379.21 -7.43,-2.48 3.72,-1.23 1.23,-3.72 z" stroke-miterlimit="10" pointer-events="all" id="path22535" style="stroke-width:0.96925" />
+                        <text x="146" y="346" font-family="Helvetica" font-size="11px" text-anchor="middle" id="text22539" style="stroke-width:0.96925">Weekend</text>
+                        </g>
+                        <g data-cell-id="2x3FeHkugDyZedHAMUo6-22" id="g22557" transform="translate(-0.55401242,0.5)">
+                        <g id="g22555">
+                        <path d="m 243,320 v 53.63" fill="none" stroke-miterlimit="10" pointer-events="stroke" id="path22551" />
+                        <path d="m 243,378.88 -3.5,-7 3.5,1.75 3.5,-1.75 z" stroke-miterlimit="10" pointer-events="all" id="path22553" />
+                        </g>
+                        </g>
+                        <g data-cell-id="2x3FeHkugDyZedHAMUo6-25" id="g22565" transform="translate(-0.55401242,0.5)">
+                        <g id="g22563">
+                        <path d="M 423,320 306.05,534.41" fill="none" stroke-miterlimit="10" pointer-events="stroke" id="path22559" />
+                        <path d="m 303.54,539.02 0.27,-7.82 2.24,3.21 3.91,0.14 z" stroke-miterlimit="10" pointer-events="all" id="path22561" />
+                        </g>
+                        </g>
+                        <g data-cell-id="2x3FeHkugDyZedHAMUo6-26" id="g22573" transform="translate(-0.55401242,0.5)">
+                        <g id="g22571">
+                        <path d="m 63,440 115.11,95.92" fill="none" stroke-miterlimit="10" pointer-events="stroke" id="path22567" />
+                        <path d="m 182.14,539.28 -7.62,-1.79 3.59,-1.57 0.89,-3.81 z" stroke-miterlimit="10" pointer-events="all" id="path22569" />
+                        </g>
+                        </g>
+                        <g data-cell-id="2x3FeHkugDyZedHAMUo6-27" id="g22581" transform="translate(-0.55401242,0.5)">
+                        <g id="g22579">
+                        <path d="m 243,440 v 53.63" fill="none" stroke-miterlimit="10" pointer-events="stroke" id="path22575" />
+                        <path d="m 243,498.88 -3.5,-7 3.5,1.75 3.5,-1.75 z" stroke-miterlimit="10" pointer-events="all" id="path22577" />
+                        </g>
+                        </g>
+                        <g data-cell-id="2x3FeHkugDyZedHAMUo6-4" id="g24449" transform="translate(-180.55401,-119.5)">
+                        <rect x="363" y="260" width="120" height="60" fill="none" pointer-events="all" id="rect24445" />
+                        <text x="423" y="294" font-family="Helvetica" font-size="12px" text-anchor="middle" id="text24447" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.6667px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-anchor:middle">Question</text>
+                        </g>
+                        <g data-cell-id="2x3FeHkugDyZedHAMUo6-4" id="g24455" transform="translate(-361.40757,-0.35355339)">
+                        <rect x="363" y="260" width="120" height="60" fill="none" pointer-events="all" id="rect24451" />
+                        <text x="423" y="294" font-family="Helvetica" font-size="12px" text-anchor="middle" id="text24453" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.6667px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-anchor:middle">Question</text>
+                        </g>
+                        <g data-cell-id="2x3FeHkugDyZedHAMUo6-4" id="g24461" transform="translate(-179.2535,120.5)">
+                        <rect x="363" y="260" width="120" height="60" fill="none" pointer-events="all" id="rect24457" />
+                        <text x="423" y="294" font-family="Helvetica" font-size="12px" text-anchor="middle" id="text24459" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.6667px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-anchor:middle">Question</text>
+                        </g>
+                        <g data-cell-id="2x3FeHkugDyZedHAMUo6-4" id="g24467" transform="translate(-360.87409,121.375)">
+                        <rect x="363" y="260" width="120" height="60" fill="none" pointer-events="all" id="rect24463" />
+                        <text x="423" y="294" font-family="Helvetica" font-size="12px" text-anchor="middle" id="text24465" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.6667px;font-family:'Classic Console';-inkscape-font-specification:'Classic Console, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-anchor:middle">Question</text>
+                        </g>
+                    </svg>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide14">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Last</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide14">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide13">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide illustration">
+                    <h2>The single field form: a pattern</h2>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide15">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Last</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide15">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide14">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide">
+                    <h2>Example model</h2>
+                    <pre>
+class Book(models.Model):
+    title = models.CharField(max_length=255)
+    author = models.CharField(max_length=255)
+    misc = models.JSONField(default=dict, blank=True)
+</pre>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide16">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Last</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide16">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide15">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide">
+                    <h2>Forms and views</h2>
+                    <pre>
+class SingleFieldFormMixin:
+    fieldname: str
+
+    def get_field(self):
+        return self[self.fieldname]
+
+class BookTitleForm(SingleFieldFormMixin, forms.ModelForm):
+    fieldname = "title"
+
+    class Meta:
+        model = Book
+        fields = ['title']
+
+def edit_view(request):
+    …
+    if request.POST:
+        forms = <em class="highlight">get_forms(data=request.POST, obj=object)</em>
+    …
+
+def get_field_template_view(request, fieldname):
+    …
+    forms = <em class="highlight">get_forms(obj=object)</em>
+    form = forms[fieldname]
+    context = super().get_context_data(fieldname=fieldname, form=form, **kwargs)
+    return render(request, '_form_for_field.html', context=context)
+</pre>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide17">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Last</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide17">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide16">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide">
+                    <h2>Templates</h2>
+                    <pre>
+&lt;!-- part of detail template --&gt;
+    &lt;h2&gt;
+    {{ object.title }}
+    &lt;button <em class="highlight">hx-get</em>="{% url 'get_field' pk=object.pk fieldname='title' %}"
+            <em class="highlight">hx-target</em>="closest h2"&gt;Edit&lt;/button&gt;
+    &lt;/h2&gt;
+      </pre>
+                    <pre>
+&lt;!-- _form_for_field.html --&gt;
+&lt;form class="singlefield"
+       method="post"
+       action="{% url 'edit' pk=object.pk fieldname=fieldname %}"&gt;
+{{ form.get_field }}
+&lt;input type="submit" value="Save"&gt;
+&lt;/form&gt;
+</pre>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide18">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Next</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide18">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide17">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide">
+                    <h2 class="huge">DEMO</h2>
+                    <div>
+                        <p class="center">If you want to follow along:</p>
+                        <p class="center">
+                            singlefieldform @ Github: <a href="https://github.com/Uninett/singlefieldform">https://github.com/Uninett/singlefieldform</a>
+                        </p>
+                        <p class="center">
+                            Argus Demo @ Sikt: <a href="http://argus-demo.uninett.no/">http://argus-demo.uninett.no/</a>
+                        </p>
+                    </div>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide19">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Last</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide19">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide18">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide">
+                    <h2>The magic</h2>
+                    <pre>
+def get_forms(data=None, obj=None):
+    data = {} if data is None else data
+    forms = {}
+    for Form in SingleFieldFormMixin.__subclasses__():
+        kwargs = {}
+        kwargs['instance'] = obj
+        if Form.fieldname in data:
+            kwargs['data'] = data
+        form = Form(**kwargs)
+        forms[form.fieldname] = form
+    return forms
+      </pre>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide20">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Next</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide20">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide19">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide">
+                    <h2>Bonus #1: more context in widget templates</h2>
+                    <pre>
+class HxWidgetMixin:
+    def __init__(self, hx: Optional[dict] = None, **kwargs):
+        super().__init__(**kwargs)
+        self.hx = {} if hx is None else hx
+
+    def __deepcopy__(self, memo):
+        obj = super().__deepcopy__(memo)
+        obj.hx = self.hx.copy()
+        memo[id(self)] = obj
+        return obj
+
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+        context["widget"]["hx"] = self.extra
+        return context
+      </pre>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide21">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">Last</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide21">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide20">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide">
+                    <h2>Bonus #2: better pluginable fields</h2>
+                    <pre>
+class BetterPluginableSingleFormField(SingleFormFieldMixin):
+    registry: dict = dict()
+
+    @classmethod
+    def register(cls):
+        cls.registry[cls.fieldname] = cls
+
+    @classmethod
+    def unregister(cls):
+        cls.registry.pop(cls.fieldname, None)
+
+    def __init_subclass__(cls, **kwargs):
+        cls.register()
+      </pre>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide22">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">First</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide22">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide21">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide illustration">
+                    <div>
+                        <h3>Argus</h3>
+                        <div class="horizontal">
+                            <dl>
+                                <dt>Homepage @ Géant</dt>
+                                <dd>
+                                    <a href="https://wiki.geant.org/spaces/NETDEV/pages/417792154/Argus">https://wiki.geant.org/spaces/NETDEV/pages/417792154/Argus</a>
+                                </dd>
+                                <dt>Docs</dt>
+                                <dd>
+                                    <a href="https://argus-server.readthedocs.io">https://argus-server.readthedocs.io</a>
+                                </dd>
+                                <dt>PyPI</dt>
+                                <dd>
+                                    argus-server
+                                </dd>
+                                <dt>Repo, issues, discussions</dt>
+                                <dd>
+                                    <a href="https://github.com/Uninett/Argus">https://github.com/Uninett/Argus</a>
+                                </dd>
+                            </dl>
+                            <img class="logo"
+                                 id="argus-logo"
+                                 src="data:image/png;base64,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"
+                                 alt="Argus Logo" />
+                        </div>
+                        <h3>The singlefieldform demo</h3>
+                        <dl>
+                            <dt>Repo</dt>
+                            <dd>
+                                <a href="https://github.com/Uninett/singlefieldform">https://github.com/Uninett/singlefieldform</a>
+                            </dd>
+                        </dl>
+                        <h3>This presentation</h3>
+                        <dl>
+                            <dt>Slides</dt>
+                            <dd>
+                                Single file: HTML + CSS (mostly flexbox), <a href="https://vim-classic.org/">vim classic</a> (thanks, Drew Devault)
+                            </dd>
+                            <dt>Illustrations</dt>
+                            <dd>
+                                Inline SVG (via inkscape), PNG as data-uri
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+                <nav>
+                    <div class="next">
+                        <a class="controls" href="#slide-end">Next</a>
+                    </div>
+                    <div class="last">
+                        <a class="controls" href="#slide-end">First</a>
+                    </div>
+                </nav>
+            </section>
+            <section id="slide-end">
+                <nav>
+                    <div class="prev">
+                        <a class="controls" href="#slide22">Prev</a>
+                    </div>
+                    <div class="first">
+                        <a class="controls" href="#slide1">First</a>
+                    </div>
+                </nav>
+                <div class="slide">
+                    <h2>The End</h2>
+                    <div>
+                        <h3 class="center" style="margin-bottom: 1rem">Funded/backed by</h3>
+                        <div class="logos">
+                            <svg class="logo"
+                                 id="sikt-logo"
+                                 version="1.1"
+                                 viewBox="0 0 1760.3199 470.39999"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 xmlns:svg="http://www.w3.org/2000/svg">
+                                <defs id="defs28583" />
+                                <g id="g28585">
+                                <path style="display:inline;stroke-width:1" d="m 229.27999,470.20354 c -14.83346,-1.54649 -27.18782,-6.44355 -38.88,-15.41142 C 187.19982,452.33762 22.455927,287.89276 17.694363,282.39999 8.8677969,272.21799 3.1412864,259.76274 0.78729141,245.62683 0.72621682,245.26007 0.5097482,242.94399 0.30625002,240.47999 -1.1568259,222.76475 4.9561066,203.52693 16.473669,189.6 19.341641,186.13207 184.96569,20.459884 188.79999,17.223589 c 9.78647,-8.2601508 21.51057,-13.7176083 34.24,-15.9383886 5.07528,-0.88543567 14.12683,-1.20305593 19.22737,-0.67469104 13.80461,1.43002134 26.23016,6.41180314 37.41262,14.99986064 1.64684,1.264761 16.30394,15.650816 37.14945,36.462467 l 34.42946,34.373523 2.62739,-2.823181 c 6.2793,-6.747155 17.66269,-16.850569 26.42375,-23.452607 7.86502,-5.926797 18.81865,-12.997047 26.56995,-17.150109 1.584,-0.848691 2.952,-1.626096 3.04,-1.727568 0.25977,-0.299552 10.8391,-5.321545 14.9391,-7.091574 19.70409,-8.506566 41.21763,-14.228697 62.34089,-16.58133 9.99127,-1.112791 16.48186,-1.389973 28.41786,-1.21359 11.73644,0.173435 17.41776,0.591164 27.42214,2.016259 62.04582,8.838249 117.44815,44.094011 152.07983,96.77734 14.77821,22.48133 25.20688,47.32018 30.9384,73.68856 3.60128,16.56809 4.99494,31.22083 4.73571,49.79009 -0.17107,12.2543 -0.56909,17.74485 -2.02109,27.88134 -8.812,61.51764 -43.47583,116.43415 -95.33286,151.03194 -32.86374,21.92595 -69.63078,34.15945 -109.75999,36.52048 -10.90077,0.64134 -27.94713,0.0544 -38.88,-1.33863 -48.99868,-6.24339 -93.41465,-28.10361 -128.31365,-63.15212 l -5.27364,-5.29623 -34.08635,34.0185 c -19.97298,19.93321 -35.2788,34.95462 -36.96635,36.27942 -9.98101,7.83546 -21.03862,12.7215 -33.59999,14.84688 -3.71485,0.62858 -14.06984,1.068 -17.28,0.73331 z M 453.84311,280.79999 c 8.2303,-10.14129 13.45485,-21.82791 15.45018,-34.56 0.71689,-4.57454 0.95209,-13.00157 0.49129,-17.60285 -1.08285,-10.81287 -4.33037,-20.82351 -9.73363,-30.00446 -4.33562,-7.36683 -3.54054,-6.52985 -57.76553,-60.81154 l -51.08544,-51.138857 -1.88131,2.018858 c -8.03447,8.621817 -18.17846,22.342709 -25.39837,34.354109 -27.77806,46.21285 -37.32579,101.50599 -26.77883,155.08239 3.76246,19.11254 9.67723,36.35845 18.69247,54.50235 8.71865,17.54698 18.41295,32.02899 31.45298,46.98659 l 3.85911,4.42663 50.05004,-50.02663 c 29.35197,-29.3382 51.12403,-51.34994 52.64704,-53.22659 z m 563.06679,155.00998 c -32.25444,-1.36278 -61.54186,-10.53392 -83.99334,-26.30188 -10.43008,-7.32519 -20.1337,-16.66951 -27.73863,-26.71152 -13.36937,-17.65383 -21.97027,-38.68663 -26.29564,-64.30393 -0.517,-3.06203 -1.76234,-13.47235 -1.76234,-14.73222 v -0.72043 h 24.61843 c 23.17344,0 24.62758,0.0329 24.77427,0.56 0.0857,0.308 0.25098,1.568 0.36723,2.8 0.11626,1.232 0.55674,4.256 0.97879,6.72 7.73532,45.15863 37.77776,73.11226 84.14123,78.29107 5.1224,0.57216 23.7416,0.5801 28.32,0.0122 13.8629,-1.71996 23.9111,-4.51814 34.08,-9.49049 14.0003,-6.84576 23.5699,-15.76432 29.7429,-27.71955 5.834,-11.29837 7.575,-24.67524 4.969,-38.17917 -3.8745,-20.07721 -18.3143,-35.15381 -44.9519,-46.93435 -12.4928,-5.525 -24.061,-9.41128 -54.24,-18.22169 -22.34796,-6.52426 -34.18844,-10.3224 -44.63995,-14.31943 -23.20967,-8.87621 -38.48583,-17.82297 -50.67472,-29.67854 -11.05741,-10.755 -17.94166,-22.06324 -22.00429,-36.14462 -4.60781,-15.97095 -5.16288,-34.44009 -1.52384,-50.70256 5.46768,-24.434483 20.39248,-45.008153 43.15104,-59.483263 4.85273,-3.086477 14.71952,-8.083117 20.23411,-10.246758 20.97209,-8.228361 43.86806,-11.830163 69.38995,-10.915846 48.257,1.728803 85.3277,19.189814 108.3035,51.013045 11.109,15.386872 18.7858,35.057832 22.1978,56.880002 l 0.4378,2.8 h -25.0204 -25.0203 l -0.3689,-2.00198 c -0.2029,-1.10109 -0.8675,-3.82125 -1.4769,-6.04478 -8.8884,-32.43137 -33.8418,-52.977347 -70.3073,-57.889331 -6.3608,-0.856813 -19.9211,-1.187799 -26.6921,-0.651504 -28.5851,2.264099 -49.29624,12.928924 -59.49214,30.634485 -1.8401,3.19534 -4.09059,8.55229 -3.65725,8.70543 0.17482,0.0618 0.094,0.27777 -0.17971,0.48 -0.63232,0.46726 -1.96851,6.33489 -2.45207,10.76768 -0.21622,1.98236 -0.28918,5.32805 -0.17788,8.16 0.72892,18.55321 10.80704,31.72698 32.53359,42.52689 12.67924,6.30263 24.19914,10.2476 55.67996,19.06748 25.2689,7.07948 38.1001,11.03853 49.28,15.20524 24.7858,9.23754 42.7024,19.80941 55.8474,32.95334 15.5915,15.59016 23.9413,33.29156 27.2488,57.76704 0.4745,3.51112 0.5814,6.4171 0.571,15.52 -0.014,12.06602 -0.3309,15.46141 -2.2328,23.91523 -6.7637,30.06484 -26.1978,54.35172 -55.6578,69.55575 -20.2653,10.45878 -42.4571,15.92915 -69.3237,17.08854 -7.8486,0.33872 -8.2848,0.33795 -16.9829,-0.0294 z m 701.97,0.15284 c -22.8475,-1.28941 -40.2659,-8.09988 -53.8583,-21.05811 -12.083,-11.51927 -19.766,-26.96788 -22.9291,-46.10471 -1.6126,-9.75584 -1.5602,-6.81523 -1.6831,-94.48 L 1640.2936,191.68 h -23.6668 -23.6669 V 172 152.32 h 23.6786 23.6786 l 0.081,-35.44 0.081,-35.440002 23.6,-0.08206 23.6,-0.08206 V 116.79793 152.32 h 35.52 35.52 V 172 191.68 h -35.5272 -35.5273 l 0.1004,80.71999 c 0.1112,89.47655 -0.049,82.73501 2.1721,91.34963 4.3306,16.7961 15.513,27.22858 31.662,29.53882 3.5316,0.50522 12.4202,0.41274 17.3205,-0.18026 5.4019,-0.65363 12.3807,-2.09062 17.099,-3.52083 2.0093,-0.60905 3.7989,-1.10736 3.9769,-1.10736 0.2147,0 0.3236,6.78743 0.3236,20.17136 v 20.17139 l -1.52,0.65168 c -6.8399,2.93264 -16.105,5.14746 -25.2,6.02407 -3.7422,0.36067 -11.962,0.61996 -14.72,0.46432 z m -500.4246,-4.49412 c -0.1184,-0.11846 -0.2154,-62.97535 -0.2154,-139.68203 V 152.32 h 24.0004 24.0004 l -0.08,139.59999 -0.08,139.6 -23.7046,0.082 c -13.0375,0.0451 -23.8015,-0.0147 -23.92,-0.13335 z m 121.8536,-0.18665 c -0.084,-0.22112 -0.1158,-88.53005 -0.071,-196.24204 l 0.082,-195.840001 h 23.84 23.84 l 0.16,113.950541 0.16,113.95054 64.8,-57.37788 64.8,-57.37788 31.984,-0.0127 c 19.1142,-0.008 31.8617,0.10396 31.68,0.27718 -0.1672,0.15941 -26.512,24.14228 -58.544,53.29524 -32.032,29.15297 -58.2812,53.12215 -58.3315,53.26483 -0.05,0.14269 28.4948,38.90783 63.4337,86.14478 34.939,47.23693 63.5282,85.99331 63.5316,86.12531 0,0.132 -12.7942,0.24 -28.4392,0.24 h -28.4453 l -52.5947,-69.65478 c -28.927,-38.31011 -52.75,-69.86439 -52.94,-70.12056 -0.2804,-0.37831 -4.1565,3.03736 -20.64,18.18852 l -20.2946,18.65431 -0.16,51.38624 -0.16,51.38627 -23.7692,0.082 c -18.8463,0.065 -23.8009,0 -23.9218,-0.32 z M 1236.1599,97.710164 c -7.3122,-1.434672 -12.5616,-4.040387 -17.2349,-8.555126 -4.1269,-3.986896 -6.5082,-7.976585 -8.2337,-13.79504 -1.1417,-3.849673 -1.449,-11.161302 -0.6373,-15.166876 1.2551,-6.194458 3.7275,-11.120809 7.6861,-15.315203 6.393,-6.77375 14.16,-9.99792 24.0849,-9.99792 9.862,0 17.9559,3.321994 24.2733,9.962499 2.4567,2.582352 3.7313,4.454627 5.2745,7.747853 4.8566,10.363664 3.7858,23.251286 -2.6854,32.319817 -1.8023,2.525664 -6.2719,6.755552 -8.6178,8.155596 -2.4751,1.477136 -6.311,3.08441 -9.3497,3.917588 -2.0911,0.573379 -3.5855,0.718582 -8.16,0.792854 -3.08,0.05001 -5.96,0.02029 -6.4,-0.06604 z" id="path28706" />
+                                </g>
+                            </svg>
+                            <svg class="logo"
+                                 id="geant-logo"
+                                 version="1.1"
+                                 id="Layer_1"
+                                 viewBox="0 0 1914.444 834.75298"
+                                 xml:space="preserve"
+                                 sodipodi:docname="Geant_logo_blue.svg"
+                                 inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+                                 xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                                 xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 xmlns:svg="http://www.w3.org/2000/svg">
+                                <defs id="defs9" />
+                                <style type="text/css" id="style1">
+  .st0{fill:#003A56;stroke:none}
+  .st1{fill:#E5004B;stroke:none}
+                                </style>
+                                <g id="g9" transform="matrix(14,0,0,14,-21,-8.0470093)">
+                                <g id="g8">
+                                <g id="g5">
+                                <path class="st0" d="m 28.9,31.6 c 1,-0.8 1.9,-1.2 2.7,-1.2 1.7,0.1 2.2,1.2 2.3,1.9 -0.4,0.1 -7.8,2.6 -8.2,2.7 -0.1,-0.1 -0.2,-0.3 -0.4,-0.4 0.5,-0.2 3.6,-3 3.6,-3 z" id="path1" style="fill:#003a56;fill-opacity:1" />
+                                <path class="st0" d="m 1.5,47.5 c 0,8.4 3.7,12.7 11,12.7 4.8,0 7.7,-2.1 7.8,-2.2 l 0.2,-0.2 V 46.2 h -10 v 3.2 c 0,0 5,0 6,0 0,0.9 0,6 0,6.5 -0.6,0.3 -2.1,1 -4.2,1 -4.3,0 -6.4,-3.1 -6.4,-9.4 0,-3.6 1,-8 6,-8 3.3,0 4.4,1.9 4.4,3.7 v 0.6 h 4.5 v -0.6 c 0,-4.1 -3.6,-6.9 -8.9,-6.9 -6.7,0 -10.4,4.1 -10.4,11.2 z" id="path2" style="fill:#003a56;fill-opacity:1" />
+                                <path class="st0" d="M 36.4,36.7 H 23.2 v 23.1 h 14.1 v -3.2 c 0,0 -9,0 -10,0 0,-0.9 0,-6.3 0,-7.3 1,0 9.2,0 9.2,0 v -3.2 c 0,0 -8.2,0 -9.2,0 0,-0.9 0,-5.3 0,-6.2 1,0 9.7,0 9.7,0 v -3.2 z" id="path3" style="fill:#003a56;fill-opacity:1" />
+                                <g id="g4">
+                                <path class="st0" d="m 95.8,36.7 h -20 c 0,0 0,13.9 0,17.1 C 74.2,51 65.9,36.7 65.9,36.7 h -4.7 v 23.1 h 3.9 c 0,0 0,-13.9 0,-17.1 1.6,2.8 9.9,17.1 9.9,17.1 h 4.7 c 0,0 0,-18.8 0,-19.9 0.9,0 5.5,0 6.4,0 0,1.1 0,19.9 0,19.9 h 4.1 c 0,0 0,-18.8 0,-19.9 0.9,0 6.2,0 6.2,0 v -3.2 z" id="path4" style="fill:#003a56;fill-opacity:1" />
+                                </g>
+                                <path class="st0" d="m 51.5,36.7 h -0.4 -4 l -8.7,23.1 h 4.2 c 0,0 2.3,-6.1 2.5,-6.8 0.7,0 7.8,0 8.5,0 0.3,0.7 2.6,6.8 2.6,6.8 h 4.2 z m -5.2,13.1 c 0.4,-1.1 2.3,-6.7 3,-8.7 0.7,2 2.6,7.5 3,8.7 -1.1,0 -4.9,0 -6,0 z" id="path5" style="fill:#003a56;fill-opacity:1" />
+                                </g>
+                                <g id="g6">
+                                <path class="st0" d="m 134.7,14.7 c -15.2,-18.8 -76.9,7.8 -93.4,14.8 -1.2,0.5 -2.7,0.4 -3.6,-1.3 0.7,1.7 2,2.3 3.7,1.7 22,-8.8 75.2,-27.9 88.5,-10.5 6,7.9 4.26192,17.6 -2.33808,31.3 -0.23654,0.53654 -0.32817,0.792311 -0.58144,1.267421 -0.28251,0.52996 -0.45657,0.975962 -1.98048,1.532579 0.8,0 1.68187,-0.497761 2.06039,-1.133469 C 127.32544,51.921388 127.6,51.5 127.8,51.1 v 0 c 9.9,-16.4 13.3,-28.6 6.9,-36.4 z" id="path6" style="fill:#003a56;fill-opacity:1" />
+                                </g>
+                                <g id="g7">
+                                <path class="st1" d="M 123.2,52.6 C 123,52.4 120.2,50 117.5,47.4 103,33.8 59.4,-8.4 40.3,2.7 34.9,5.8 33.980469,14.9 37.280469,27 c 0.05881,0.208166 0.105822,0.384911 0.170312,0.6 0.353125,1.241406 1.096989,2.131986 2.196989,2.131986 C 38.84777,29.531986 38.3,28.9 37.9,27.9 37.733791,27.415197 37.606769,26.912239 37.5,26.4 35.7,16.1 37.9,9.4 42,6.6 c 15.3,-10 52,21.6 70.4,37.5 4.2,3.7 9,7.7 10.5,8.8 2.1,1.6 3.78886,-0.08826 3.78886,-0.08826 0,0 -1.88886,1.18826 -3.48886,-0.21174 z" id="path7" />
+                                </g>
+                                </g>
+                                </g>
+                            </svg>
+                            <svg version="1.1"
+                                 class="logo"
+                                 id="nordunet-logo"
+                                 viewBox="0 0 1939.3939 549.81818"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 xmlns:svg="http://www.w3.org/2000/svg">
+                                <defs id="defs38462" />
+                                <g id="g38464">
+                                <path style="display:inline;fill:#005eb8;fill-opacity:1;stroke-width:1" d="M 0,274.90909 V 0 H 969.69695 1939.3939 V 274.90909 549.81818 H 969.69695 0 Z m 738.95219,162.66667 c 4.80613,-11.52781 18.38113,-45.12531 18.38113,-45.49245 0,-0.17916 -3.1721,-0.32574 -7.04911,-0.32574 h -7.04911 l -3.84919,11.11384 c -2.11704,6.11261 -4.12467,10.80352 -4.46138,10.42424 -0.33671,-0.37928 -2.38492,-5.27141 -4.55155,-10.87141 l -3.93935,-10.18182 -7.36832,-0.28376 -7.36832,-0.28375 1.37926,3.30102 c 0.7586,1.81557 4.28373,10.47485 7.83364,19.24286 l 6.45437,15.94182 -2.95486,6.58584 c -1.62518,3.62222 -2.95487,6.98154 -2.95487,7.46516 0,0.48361 3.23201,0.8793 7.18224,0.8793 h 7.18223 z m -545.0128,-6.13194 c 10.39217,-2.36633 15.88856,-9.4122 15.83192,-20.29506 -0.0658,-12.65081 -6.44536,-19.32899 -19.24958,-20.15071 -8.98579,-0.57668 -14.81328,0.95623 -18.95133,4.98511 -4.24024,4.12836 -5.75222,8.15417 -5.75222,15.3159 0,15.08556 12.14173,23.78334 28.12121,20.14476 z m -12.06623,-11.7808 c -1.00576,-1.43593 -1.50953,-4.34841 -1.50953,-8.72727 0,-8.05529 1.77311,-10.4509 7.73523,-10.4509 5.28858,0 7.29508,3.09415 7.29508,11.24948 0,7.70002 -1.85643,10.08385 -7.85288,10.08385 -3.19787,0 -4.50704,-0.49779 -5.6679,-2.15516 z m 97.15714,9.8965 c 2.57094,-1.51552 3.15151,-1.59582 3.15151,-0.4359 0,1.1232 1.53073,1.42183 7.28783,1.42183 h 7.28783 l -0.25753,-27.39394 -0.25752,-27.39394 -7.0303,-0.2849 -7.03031,-0.28491 v 8.74576 8.74575 l -2.48737,-0.9457 c -4.14652,-1.5765 -11.81827,-1.10746 -15.89383,0.97175 -6.5437,3.33834 -9.75443,9.88058 -9.71871,19.80301 0.0566,15.73111 12.62069,24.31811 24.9484,17.05119 z m -8.87247,-10.89285 c -2.82133,-4.39052 -2.36331,-12.60995 0.8836,-15.85687 1.97363,-1.97363 3.21464,-2.37895 6.54545,-2.13774 l 4.11008,0.29764 0.28347,8.71027 c 0.32392,9.95345 -0.41037,11.16851 -6.74948,11.16851 -2.74519,0 -4.02471,-0.55029 -5.07312,-2.18181 z m 95.00462,11.42654 c 3.2644,-1.36396 3.32239,-1.49059 3.32239,-7.25585 0,-3.22722 -0.41699,-5.86766 -0.92663,-5.86766 -0.50966,0 -2.53418,1.0909 -4.49896,2.42424 -4.93155,3.34664 -11.69805,3.36713 -15.2813,0.0464 -2.11558,-1.9607 -2.56584,-3.22894 -2.56584,-7.22715 0,-6.18244 1.46512,-9.35716 4.99258,-10.81828 3.66905,-1.51977 10.12134,-0.60168 13.54125,1.92677 4.13675,3.05843 4.7389,2.57909 4.7389,-3.77237 0,-7.11288 -1.13036,-7.94371 -11.63636,-8.55305 -8.16883,-0.47378 -13.65855,0.68777 -18.52021,3.91865 -9.83966,6.53905 -10.22802,24.79772 -0.6823,32.07859 6.78192,5.17283 19.2054,6.57235 27.51648,3.09976 z m 78.4739,-0.29445 6.78788,-1.76156 0.26979,-13.29133 0.26979,-13.29133 h -12.63342 -12.63343 v 5.33334 5.33333 h 5.33333 5.33334 v 4.36364 4.36363 h -4.30051 c -8.78153,0 -14.36783,-4.16705 -16.12753,-12.03018 -2.97553,-13.29612 6.72021,-23.01375 19.9973,-20.04248 2.70223,0.60474 6.49963,2.17757 8.43868,3.49518 5.84357,3.97081 6.67139,3.42892 6.33939,-4.14979 l -0.28673,-6.54545 -6.30303,-2.14749 c -7.54188,-2.56958 -18.65509,-2.90696 -25.80575,-0.78345 -6.37416,1.89292 -12.26084,7.08155 -15.46545,13.63155 -2.36209,4.82794 -2.56393,6.10365 -2.19306,13.86087 0.49045,10.25802 3.21325,15.85333 9.98017,20.50909 8.45569,5.81768 18.88867,6.81434 32.99924,3.15243 z m 39.51516,-0.24794 c 3.01522,-1.56163 3.63636,-1.63753 3.63636,-0.44435 0,1.1368 1.44298,1.43898 6.87131,1.43898 h 6.87131 l -0.32642,-15.75757 c -0.35481,-17.12828 -0.73134,-18.47608 -6.06376,-21.70522 -2.4773,-1.50018 -4.98026,-1.80993 -14.62517,-1.80993 -6.4,0 -12.83636,0.33558 -14.30303,0.74574 -2.44688,0.68429 -2.66666,1.13911 -2.66666,5.51854 0,2.62503 0.4467,5.04885 0.99266,5.38628 0.54597,0.33742 2.93092,-0.12672 5.29989,-1.03144 5.16661,-1.97314 15.65672,-1.6036 17.02752,0.59984 0.70354,1.13087 -0.40012,1.53006 -5.97473,2.16102 -14.13491,1.59986 -20.25444,6.08679 -20.25444,14.85089 0,3.29939 0.63731,4.91234 3.00762,7.61198 4.94342,5.63025 12.58619,6.53782 20.50754,2.43524 z m -8.93108,-9.14065 c -1.57514,-1.89792 -0.3624,-5.3105 2.22617,-6.26441 1.15437,-0.42538 3.95339,-1.06009 6.22006,-1.41045 l 4.12121,-0.63702 v 3.85613 c 0,2.82 -0.50398,4.12585 -1.87565,4.85995 -2.76291,1.47866 -9.33537,1.2302 -10.69179,-0.4042 z m 62.47247,10.49914 c 1.21019,-0.4644 1.51645,-1.64821 1.29462,-5.00419 l -0.29056,-4.39589 -5.33333,-0.0879 -5.33334,-0.088 -0.2758,-9.89001 -0.2758,-9.89 5.60913,-0.29181 5.60914,-0.29181 0.29555,-4.60606 0.29556,-4.60607 h -5.82292 -5.82292 l -0.29082,-5.57575 -0.29081,-5.57576 h -6.78788 -6.78788 l -0.29081,5.57576 c -0.27261,5.22651 -0.44297,5.57575 -2.71981,5.57575 -2.29274,0 -2.4124,0.25834 -2.13342,4.60607 0.24683,3.84661 0.6359,4.65461 2.35971,4.9005 1.94368,0.27727 2.08816,0.95645 2.47551,11.63637 0.52504,14.47649 1.82464,16.72448 10.97548,18.98493 2.25798,0.55777 11.22941,-0.0889 13.5414,-0.97613 z m 41.24648,-0.18759 6.30303,-1.63081 0.29081,-5.57576 c 0.15996,-3.06667 0.15996,-5.57553 0,-5.57527 -0.15994,2.7e-4 -2.5864,0.873 -5.39212,1.93939 -3.06523,1.16503 -7.44914,1.93891 -10.98368,1.93891 -5.20864,0 -6.20702,-0.32464 -8.71687,-2.8345 -1.55898,-1.55897 -2.8345,-3.30443 -2.8345,-3.87879 0,-0.6995 4.80231,-1.04429 14.54545,-1.04429 h 14.54546 v -5.12786 c 0,-7.38459 -3.14396,-13.15559 -8.72727,-16.01959 -3.75567,-1.9265 -5.53441,-2.19671 -12.76678,-1.93939 -7.51383,0.26732 -8.84795,0.60821 -12.60606,3.22103 -6.35776,4.4202 -8.80636,9.91023 -8.30022,18.60997 0.33373,5.73615 0.87848,7.60541 3.04372,10.4442 3.41903,4.48256 5.73111,5.93564 12.21799,7.67866 6.89223,1.85193 11.62181,1.80169 19.38104,-0.2059 z m -21.33333,-25.38839 c 0,-0.53333 0.87273,-1.84242 1.93939,-2.90909 2.83222,-2.83221 10.02138,-2.70366 12.06623,0.21577 0.83024,1.18533 1.50953,2.49442 1.50953,2.90909 0,0.41466 -3.49091,0.75393 -7.75758,0.75393 -4.52525,0 -7.75757,-0.40404 -7.75757,-0.9697 z m 130.66666,24.22619 c 2.57094,-1.51552 3.15152,-1.59582 3.15152,-0.4359 0,1.1244 1.53923,1.42183 7.35792,1.42183 h 7.35793 l -0.32762,-15.31855 c -0.36326,-16.98465 -0.9928,-19.01877 -6.88221,-22.23702 -2.49128,-1.36136 -5.45298,-1.71715 -14.2939,-1.71715 -6.13333,0 -12.35152,0.33558 -13.81818,0.74574 -2.44689,0.68429 -2.66667,1.13911 -2.66667,5.51854 0,2.62503 0.3899,5.01375 0.86645,5.30826 0.47654,0.29453 2.71322,-0.11609 4.9704,-0.91246 6.77238,-2.38944 17.43588,-1.55159 17.43588,1.36995 0,0.44566 -3.13045,1.11875 -6.95654,1.49576 -13.11221,1.29205 -19.22528,5.6636 -19.22528,13.74828 0,2.38556 0.65906,5.61187 1.46458,7.16958 3.35097,6.48006 13.90255,8.36042 21.56572,3.84314 z m -8.29091,-8.90498 c -3.25885,-3.25885 0.20501,-6.96956 7.32122,-7.84296 l 4.12121,-0.50583 v 3.7524 c 0,2.71745 -0.51733,4.02927 -1.87565,4.75622 -2.54525,1.36217 -8.13821,1.26874 -9.56678,-0.15983 z m 174.34928,8.18628 c 7.22256,-3.68432 9.98441,-8.57746 9.98441,-17.68931 0,-9.05379 -2.74768,-13.93695 -9.98217,-17.7402 -4.93458,-2.59417 -5.96055,-2.77507 -13.72216,-2.41956 -9.44204,0.43247 -13.19527,2.23494 -17.38459,8.34885 -3.41206,4.97957 -3.86497,15.854 -0.91417,21.94951 5.12338,10.58351 19.45017,13.96208 32.01868,7.55071 z m -17.80597,-9.20446 c -3.12127,-4.97789 -2.56031,-15.3316 0.97054,-17.91342 2.54668,-1.86218 7.82829,-1.5202 9.9957,0.64721 3.83061,3.83061 3.81612,14.61266 -0.0239,17.75106 -3.0923,2.52734 -9.22402,2.25565 -10.94239,-0.48485 z m 189.44459,11.08536 6.303,-1.63081 0.2908,-5.57576 c 0.16,-3.06667 0.099,-5.57576 -0.1365,-5.57576 -0.2351,0 -2.3295,0.86315 -4.6545,1.9181 -8.4995,3.85676 -20.9771,1.76502 -22.4216,-3.75876 -0.524,-2.00372 -0.289,-2.03813 13.9217,-2.03813 h 14.4547 l -0.021,-5.0909 c -0.027,-6.44301 -2.6839,-12.36458 -6.896,-15.36866 -2.6755,-1.90822 -4.7127,-2.39021 -11.2914,-2.67135 -7.1495,-0.30554 -8.6124,-0.0566 -13.3828,2.27733 -7.13465,3.49066 -10.15652,8.04163 -10.81892,16.29317 -0.91782,11.43404 4.64911,18.72143 16.49392,21.59166 6.7995,1.64761 10.6651,1.56882 18.159,-0.37013 z m -21.3334,-25.35061 c 0,-0.51256 0.9551,-1.82165 2.1223,-2.90909 3.0497,-2.84123 9.8398,-2.73952 11.8834,0.17799 0.8302,1.18533 1.5095,2.49442 1.5095,2.90909 0,0.41466 -3.4909,0.75393 -7.7576,0.75393 -4.3156,0 -7.7576,-0.41349 -7.7576,-0.93192 z m 63.0091,25.06613 c 2.2961,-0.68792 5.6402,-2.63288 7.4313,-4.32214 2.8042,-2.64464 3.2566,-3.70889 3.2566,-7.65991 0,-3.89371 -0.4822,-5.07078 -3.1848,-7.77333 -3.1388,-3.13878 -3.5425,-3.27669 -17.4753,-5.97009 -1.8636,-0.36028 -2.6243,-1.03246 -2.4147,-2.13401 0.4899,-2.57633 10.2705,-2.70026 15.9189,-0.20172 2.4714,1.09318 4.656,1.9876 4.8549,1.9876 0.1989,0 0.3616,-2.56639 0.3616,-5.70307 v -5.70306 l -4.3082,-1.08482 c -5.6317,-1.41808 -16.283,-1.38499 -21.1247,0.0657 -8.158,2.44417 -12.0814,9.54296 -9.1508,16.55678 1.9564,4.68252 4.7305,6.284 14.334,8.27522 5.7821,1.19888 8.1285,2.10072 8.1285,3.1242 0,1.0891 -1.4856,1.50932 -6.1119,1.72885 -4.9044,0.23272 -7.1786,-0.19832 -11.5111,-2.18182 -2.9696,-1.35952 -5.5855,-2.47185 -5.8132,-2.47185 -0.2276,0 -0.284,2.72728 -0.1252,6.06061 l 0.2887,6.06061 6.303,1.68706 c 6.7897,1.81731 13.5155,1.70467 20.3424,-0.34073 z m 51.4152,0.28448 6.303,-1.63081 0.2908,-5.57576 c 0.16,-3.06667 0.1064,-5.57576 -0.1192,-5.57576 -0.2254,0 -2.4868,0.9187 -5.0252,2.04156 -3.6216,1.60204 -6.0338,1.96143 -11.2036,1.66931 -6.8876,-0.38919 -9.9315,-1.98363 -10.9069,-5.71306 -0.469,-1.79368 0.148,-1.8766 13.964,-1.8766 h 14.4547 l -0.021,-5.0909 c -0.027,-6.44301 -2.6839,-12.36458 -6.896,-15.36866 -2.6755,-1.90822 -4.7127,-2.39021 -11.2914,-2.67135 -7.1495,-0.30554 -8.6124,-0.0566 -13.3828,2.27733 -6.9413,3.39608 -10.0914,8.00515 -10.7983,15.7991 -1.1069,12.20807 4.0045,18.97991 16.6929,22.11559 6.548,1.6182 10.4779,1.53057 17.9394,-0.39999 z m -21.3333,-25.35061 c 0,-0.51256 0.955,-1.82165 2.1222,-2.90909 3.0497,-2.84123 9.8398,-2.73952 11.8834,0.17799 0.8302,1.18533 1.5095,2.49442 1.5095,2.90909 0,0.41466 -3.4909,0.75393 -7.7576,0.75393 -4.3156,0 -7.7575,-0.41349 -7.7575,-0.93192 z m 58.909,24.18841 c 2.571,-1.51552 3.1516,-1.59582 3.1516,-0.4359 0,1.1244 1.5392,1.42183 7.3579,1.42183 h 7.3579 l -0.3276,-15.31855 c -0.3632,-16.98465 -0.9929,-19.01877 -6.8822,-22.23702 -2.4914,-1.36136 -5.453,-1.71715 -14.2939,-1.71715 -6.1334,0 -12.3515,0.33558 -13.8182,0.74574 -2.4469,0.68429 -2.6667,1.13911 -2.6667,5.51854 0,2.62503 0.3899,5.01375 0.8665,5.30826 0.4766,0.29453 2.7132,-0.11609 4.9703,-0.91246 6.7725,-2.38944 17.436,-1.55159 17.436,1.36995 0,0.44566 -3.1305,1.11875 -6.9566,1.49576 -13.1122,1.29205 -19.2253,5.6636 -19.2253,13.74828 0,2.38556 0.6591,5.61187 1.4647,7.16958 3.3509,6.48006 13.9025,8.36042 21.5656,3.84314 z m -8.2909,-8.90498 c -3.2588,-3.25885 0.205,-6.96956 7.3212,-7.84296 l 4.1213,-0.50583 v 3.7524 c 0,2.71745 -0.5174,4.02927 -1.8757,4.75622 -2.5453,1.36217 -8.1382,1.26874 -9.5668,-0.15983 z m 105.4657,9.78753 3.9161,-1.1733 v -6.14954 c 0,-3.38224 -0.3516,-6.14953 -0.7812,-6.14953 -0.4298,0 -2.26,1.0909 -4.0672,2.42424 -4.2264,3.11808 -11.1756,3.34371 -14.815,0.481 -4.6528,-3.6599 -4.314,-14.51901 0.5594,-17.93254 3.2567,-2.28101 9.5479,-1.83638 13.6785,0.96669 1.9647,1.33333 3.9892,2.42424 4.4989,2.42424 0.5097,0 0.9266,-2.60283 0.9266,-5.78407 0,-7.11288 -1.1303,-7.94371 -11.6363,-8.55305 -8.9993,-0.52195 -14.4921,0.89207 -19.0663,4.90823 -4.6196,4.05611 -6.1458,7.96705 -6.1458,15.74893 0,11.19036 5.1569,17.00406 17.9394,20.22393 2.7231,0.68594 10.35,-0.0441 14.9929,-1.43523 z m 118.4068,0.50557 c 2.8968,-0.84545 6.2005,-2.13304 7.3417,-2.8613 1.8231,-1.16349 2.2825,-1.09465 3.7867,0.56751 1.4846,1.6405 3.0112,1.88908 11.5009,1.87263 l 9.7891,-0.019 -4.3329,-3.61739 c -2.3831,-1.98956 -5.4011,-4.52992 -6.7065,-5.64523 l -2.3735,-2.02785 2.1004,-4.33892 c 1.326,-2.73925 2.1004,-6.19231 2.1004,-9.36608 v -5.02718 h -6.7395 -6.7395 l -0.2908,5.2613 -0.2908,5.26132 -4.2207,-3.60596 -4.2207,-3.60594 3.83,-2.65419 c 4.7604,-3.29891 6.5508,-6.54504 6.5508,-11.87672 0,-7.75365 -6.4512,-12.05254 -18.087,-12.05254 -11.9545,0 -18.5998,4.75333 -18.5998,13.30429 0,3.20938 0.6958,5.01786 3.0652,7.96627 2.925,3.63976 2.9751,3.84295 1.094,4.43998 -3.2733,1.0389 -7.0683,7.75999 -7.0683,12.51811 0,7.60701 4.9734,13.34135 13.5765,15.65367 6.2885,1.6902 8.7222,1.66628 14.9343,-0.14679 z m -11.262,-11.50963 c -1.5745,-1.57451 -2.3751,-3.46182 -2.3653,-5.57576 0.03,-6.42318 1.2118,-6.4 8.6027,0.16873 3.7723,3.35265 6.6236,6.47631 6.3361,6.94146 -0.2875,0.46515 -2.6985,0.84574 -5.358,0.84574 -3.8409,0 -5.3248,-0.48951 -7.2155,-2.38017 z m 2.1695,-23.75748 c -2.9974,-3.56205 -3.2287,-5.10541 -1.0865,-7.24763 1.787,-1.78689 2.7796,-1.88377 5.3278,-0.52 2.4049,1.28704 2.4684,5.80698 0.1223,8.7043 l -1.7534,2.16539 z m 143.5715,33.87899 c 2.571,-1.51552 3.1516,-1.59582 3.1516,-0.4359 0,1.1232 1.5307,1.42183 7.2878,1.42183 h 7.2878 l -0.2575,-27.39394 -0.2575,-27.39394 -7.0303,-0.2849 -7.0303,-0.28491 v 8.74576 8.74575 l -2.4874,-0.9457 c -7.06,-2.68419 -17.6886,0.07 -21.5251,5.57781 -4.189,6.01409 -5.3648,16.38254 -2.7039,23.84372 3.5759,10.02647 14.3155,13.85674 23.5648,8.40442 z m -8.4848,-10.65043 c -1.5117,-1.51166 -1.9394,-3.23232 -1.9394,-7.80165 0,-7.68006 2.5396,-10.62259 9.168,-10.62259 h 4.4078 v 9.59322 c 0,10.5646 -0.122,10.77041 -6.3824,10.77041 -2.0217,0 -4.0711,-0.75649 -5.254,-1.93939 z m 61.1799,10.62126 c 3.1898,-1.62735 3.7898,-1.70003 3.7898,-0.45915 0,1.17881 1.3604,1.47425 6.7879,1.47425 h 6.7878 v -19.39394 -19.39394 h -6.7878 -6.7879 v 13.54165 c 0,15.09993 -0.2028,15.54926 -7.0151,15.54926 -5.2531,0 -5.591,-0.94911 -5.591,-15.70909 v -13.38182 h -7.2727 -7.2727 v 13.70568 c 0,7.53813 0.5007,15.37712 1.1128,17.41999 2.6498,8.8441 12.2944,11.72554 22.2489,6.64711 z m 61.5583,0.56286 c 3.2644,-1.36396 3.3224,-1.49059 3.3224,-7.25585 0,-3.50999 -0.4156,-5.86766 -1.0344,-5.86766 -0.5689,0 -2.4647,1.0909 -4.2127,2.42424 -4.5821,3.49496 -11.9045,3.43237 -15.4691,-0.13223 -2.1357,-2.13565 -2.5565,-3.42492 -2.5565,-7.83217 0,-4.5381 0.3963,-5.67198 2.8345,-8.11019 3.7718,-3.77188 9.8156,-3.93704 15.0126,-0.41026 1.9647,1.33333 4.0101,2.42424 4.5452,2.42424 0.5778,0 0.8557,-2.46136 0.6842,-6.06015 l -0.2887,-6.06015 -3.8787,-1.29556 c -2.4686,-0.82452 -6.7654,-1.15347 -11.8182,-0.90474 -9.8928,0.48697 -15.8498,3.66909 -19.3793,10.3519 -3.7525,7.10509 -2.6431,18.11154 2.3859,23.67276 5.8826,6.50496 20.4712,8.97568 29.8528,5.05582 z m 31.686,-0.45307 c 2.8774,-1.39303 3.6364,-1.48227 3.6364,-0.42757 0,1.00377 1.676,1.33288 6.7879,1.33288 h 6.7879 v -15.07846 c 0,-16.89927 -0.7312,-19.59765 -6.077,-22.4265 -3.6209,-1.91602 -18.9158,-2.83099 -25.923,-1.55075 l -4.3637,0.79726 -0.3011,4.71906 c -0.1656,2.59548 0.058,5.0786 0.498,5.51805 0.4394,0.43945 2.5385,0.17954 4.6647,-0.57757 6.6822,-2.37952 17.9263,-1.53821 17.9263,1.34129 0,0.43745 -2.8417,1.06072 -6.3149,1.38505 -13.7516,1.28415 -19.8669,5.54221 -19.8669,13.83326 0,11.77939 10.5007,16.96518 22.5454,11.134 z m -7.806,-8.9856 c -3.2589,-3.25885 0.205,-6.96956 7.3212,-7.84296 l 4.1212,-0.50583 v 3.7524 c 0,2.71745 -0.5173,4.02927 -1.8757,4.75622 -2.5453,1.36217 -8.1382,1.26874 -9.5667,-0.15983 z m 63.0985,10.01662 c 0.4575,-0.45755 0.6948,-2.73933 0.5273,-5.07063 l -0.3046,-4.23873 -4.1707,0.30591 C 1696.6615,422.13123 1696,421.08214 1696,410.59632 v -9.04499 l 5.5757,-0.29082 5.5758,-0.29081 0.2955,-4.60606 0.2956,-4.60607 H 1701.8713 1696 v -5.86066 -5.86066 l -7.0303,0.2849 -7.0303,0.28491 -0.2909,5.57576 c -0.2725,5.22651 -0.4429,5.57575 -2.7198,5.57575 -2.2927,0 -2.4124,0.25834 -2.1334,4.60607 0.2522,3.93065 0.6155,4.6515 2.4774,4.91592 2.0403,0.28979 2.1856,0.7927 2.2396,7.75758 0.1185,15.26777 2.2636,20.31824 9.4977,22.36241 3.8656,1.09231 14.5888,0.60165 15.9188,-0.72839 z m 64.2512,-1.00812 c 14.2901,-6.32119 14.3451,-30.54381 0.084,-37.02002 -5.4495,-2.47466 -17.088,-2.48335 -22.4157,-0.0168 -4.7383,2.19379 -8.5802,6.27275 -10.0498,10.66992 -1.5045,4.50158 -1.3858,13.0717 0.2334,16.85615 4.479,10.46815 19.7621,14.98952 32.148,9.51068 z m -17.0991,-9.88515 c -1.7845,-1.7845 -1.9951,-2.93574 -1.6796,-9.18308 0.413,-8.17877 1.8234,-10.02722 7.6908,-10.07913 5.3921,-0.0477 7.1806,2.60149 7.1806,10.63583 0,5.114 -0.4125,7.04007 -1.8473,8.62547 -2.5164,2.78071 -8.5642,2.7812 -11.3445,9.1e-4 z m -1633.61895,-5.95971 0.26532,-16.72727 10.27568,16.48485 10.27569,16.48484 7.4372,0.28351 7.4372,0.2835 -0.25834,-25.98047 -0.25834,-25.98047 -6.51856,-0.28612 -6.51857,-0.28612 -0.26931,13.86187 -0.26932,13.86188 -7.33797,-11.15151 c -4.03587,-6.13334 -8.09323,-12.3682 -9.01633,-13.85526 -1.65344,-2.66357 -1.80375,-2.69959 -10.11658,-2.42424 l -8.43821,0.2795 -0.25826,25.93939 -0.25827,25.93939 h 6.78082 6.78082 z m 113.23501,3.22857 v -13.49872 l 2.94292,-0.64637 c 1.61861,-0.35551 5.00043,-0.49927 7.51515,-0.31947 l 4.57224,0.3269 0.29081,-5.57576 0.29082,-5.57576 h -4.18397 c -2.33268,0 -5.78658,0.85896 -7.80596,1.94128 l -3.62201,1.94128 v -1.94128 c 0,-1.76935 -0.64411,-1.94128 -7.27272,-1.94128 h -7.27273 v 19.39394 19.39394 h 7.27273 7.27272 z m 87.27273,-5.89524 v -19.39394 h -6.78788 -6.78788 v 19.39394 19.39394 h 6.78788 6.78788 z m 299.58855,8.48485 c 1.7455,-6 3.47919,-11.2416 3.85266,-11.64799 0.37346,-0.4064 2.2263,4.3936 4.11744,10.66667 l 3.43843,11.40556 7.31788,0.28155 7.31789,0.28155 2.45118,-7.55428 c 3.62454,-11.17042 9.37051,-30.03398 9.37051,-30.7626 0,-0.34882 -3.13762,-0.506 -6.97249,-0.3493 l -6.9725,0.2849 -2.55694,10.18182 c -1.40632,5.6 -2.76724,10.80472 -3.02427,11.56605 -0.25703,0.76133 -2.16026,-3.94763 -4.2294,-10.46438 l -3.76206,-11.8486 -6.25176,0.28255 -6.25174,0.28256 -3.48065,11.36781 c -1.91435,6.25229 -3.74823,10.83411 -4.07528,10.18182 -0.32705,-0.6523 -1.81264,-5.8769 -3.30133,-11.61023 l -2.7067,-10.42425 h -7.25993 c -6.45681,0 -7.20503,0.18773 -6.76368,1.69697 0.27294,0.93334 3.02478,9.66061 6.11519,19.39394 l 5.61894,17.69697 h 7.41749 7.41749 z M 805.81817,416 v -14.54546 h 4.36363 4.36364 v -4.84848 -4.84849 h -4.36364 c -3.99146,0 -4.36363,-0.20385 -4.36363,-2.39012 0,-3.19877 3.03516,-4.71075 7.83016,-3.90064 l 3.8062,0.64306 v -5.41857 -5.41857 h -7.30387 c -11.81696,0 -16.69503,3.27881 -17.85978,12.00457 -0.46733,3.50109 -0.86948,4.03399 -3.25029,4.30712 -2.59392,0.29757 -2.70371,0.51714 -2.42424,4.84848 0.26734,4.14327 0.52404,4.56341 2.95939,4.84363 l 2.66667,0.30683 v 14.48105 14.48104 h 6.78788 6.78788 z m 80.48484,1.43054 v -13.1149 l 2.66667,-1.0169 c 1.46667,-0.55929 5.06667,-0.87576 8,-0.70327 l 5.33333,0.31362 0.29081,-5.57576 0.29083,-5.57576 h -4.18397 c -2.33134,0 -5.78621,0.85875 -7.80245,1.9394 -1.99018,1.06667 -3.83825,1.93939 -4.10686,1.93939 -0.2686,0 -0.48836,-0.87272 -0.48836,-1.93939 0,-1.75469 -0.64647,-1.9394 -6.78788,-1.9394 h -6.78787 v 19.39394 19.39394 h 6.78787 6.78788 z m 64.9697,3.90279 v -9.21212 l 2.66666,0.0209 c 2.09451,0.0164 3.44691,1.10872 6.30312,5.09091 2.00005,2.78848 5.27278,6.95001 7.27273,9.24781 l 3.63628,4.17781 8.47747,-0.29902 8.47748,-0.29904 -8.30157,-10.39983 -8.30148,-10.39985 3.83864,-3.66076 c 8.90095,-8.48844 7.38793,-20.79581 -3.14463,-25.57948 -3.32272,-1.50911 -6.47413,-1.79968 -19.71258,-1.81757 l -15.75758,-0.0213 v 26.18182 26.18181 h 7.27273 7.27273 z m 0,-26.06174 v -6.42311 l 4.60606,0.0143 c 6.30411,0.0196 9.38243,1.72259 9.74402,5.3907 0.41509,4.21076 -2.48321,6.45712 -9.03178,7.00018 l -5.3183,0.44104 z m 247.27269,22.15895 v -13.1149 l 2.6667,-1.0169 c 1.4667,-0.55929 5.0667,-0.87576 8,-0.70327 l 5.3333,0.31362 0.2908,-5.57576 0.2909,-5.57576 h -4.184 c -2.3313,0 -5.7862,0.85875 -7.8025,1.9394 -1.9901,1.06667 -3.8382,1.93939 -4.1068,1.93939 -0.2686,0 -0.4884,-0.87272 -0.4884,-1.93939 0,-1.75469 -0.6465,-1.9394 -6.7878,-1.9394 h -6.7879 v 19.39394 19.39394 h 6.7879 6.7878 z m 80.4849,-0.42673 c 0,-15.12394 0.1939,-15.54927 7.0902,-15.54927 5.2067,0 5.8035,1.52227 6.2966,16.06109 l 0.4419,13.02982 h 6.6614 6.6614 v -14.5766 c 0,-20.6627 -1.8849,-24.29201 -12.9833,-24.99871 -4.8244,-0.30719 -6.9231,0.0398 -10.1269,1.67422 l -4.0413,2.06172 v -9.71668 -9.71667 h -6.7879 -6.7879 v 27.63636 27.63636 h 6.7879 6.7879 z m 193.7477,8.45073 -0.2932,-5.09091 -11.8788,-0.27227 -11.8788,-0.27227 v -5.78833 -5.78834 h 11.1516 11.1515 v -5.33333 -5.33333 h -11.1515 -11.1516 v -4.36364 -4.36364 h 12.1213 12.1212 v -5.33333 -5.33333 h -19.394 -19.3939 v 26.18182 26.18181 h 19.4446 19.4446 z m 256.1917,-14.30303 v -19.39394 h -6.7879 -6.7879 v 19.39394 19.39394 h 6.7879 6.7879 z m 76.606,5.8523 c 0,-15.12394 0.194,-15.54927 7.0903,-15.54927 5.2066,0 5.8035,1.52227 6.2966,16.06109 l 0.4419,13.02982 h 6.6613 6.6614 l -0.054,-14.30303 c -0.063,-16.42689 -0.9509,-20.06986 -5.6645,-23.23914 -4.3215,-2.90566 -12.1747,-3.02007 -17.5921,-0.2563 -3.2238,1.6446 -3.8402,1.72243 -3.8402,0.48484 0,-1.1788 -1.3604,-1.47425 -6.7879,-1.47425 h -6.7878 v 19.39394 19.39394 h 6.7878 6.7879 V 417.00381 Z M 321.45454,380.60606 v -4.84849 l -7.0303,-0.2849 -7.03031,-0.28491 v 5.4183 5.4183 l 7.03031,-0.28491 7.0303,-0.28491 z m 1407.51516,0 v -5.33333 h -6.7879 -6.7879 v 5.33333 5.33333 h 6.7879 6.7879 z m -75.6234,-44.97337 c 5.0738,-1.10167 14.6738,-3.8697 21.3333,-6.1512 l 12.1082,-4.14816 0.2614,-21.09091 0.2613,-21.09091 h -2.9684 c -1.7707,0 -5.9846,1.76797 -10.4432,4.38151 -17.16,10.05887 -31.1943,13.49739 -52.4019,12.83895 -21.1605,-0.65696 -31.9173,-4.86401 -40.0464,-15.66232 -3.6063,-4.79051 -7.6325,-15.08621 -7.6325,-19.51789 v -2.40388 h 58.2985 58.2986 l -0.4822,-18.18182 c -0.5449,-20.54808 -2.1541,-28.74468 -7.9483,-40.48485 -7.9381,-16.08459 -20.6584,-26.32479 -39.829,-32.0636 -11.8858,-3.55807 -37.9318,-4.48744 -52.5516,-1.87512 -34.0959,6.0924 -57.5374,26.90887 -65.9669,58.57973 -2.1927,8.23831 -2.4745,11.17776 -2.4712,25.78323 0,13.85303 0.3385,17.72336 2.1009,24.24243 5.7033,21.09617 18.0931,37.06534 36.0978,46.52657 8.6753,4.55872 25.1958,9.97766 35.5434,11.65869 12.7889,2.07762 46.2285,1.31059 58.4382,-1.34045 z m -79.4965,-105.57208 c 0.044,-3.70873 3.0549,-12.05713 5.7858,-16.04261 9.9441,-14.51243 40.5611,-16.55389 51.7757,-3.45226 3.7264,4.35352 6.4068,11.84616 6.4068,17.90925 v 4.25228 h -32 -32 l 0.032,-2.66666 z M 482.90908,334.70409 c 14.58174,-3.39557 30.34805,-10.27974 40.01613,-17.47257 6.01343,-4.47385 16.34921,-15.16282 21.23326,-21.95879 6.92059,-9.62977 12.75292,-23.6168 15.97164,-38.30303 2.58413,-11.79074 2.60695,-47.26779 0.0379,-58.95377 -3.24091,-14.74226 -8.64005,-27.95695 -15.51987,-37.98571 -4.5311,-6.60503 -16.97766,-19.23855 -22.95122,-23.29597 -12.84477,-8.72454 -30.62633,-15.66754 -44.58062,-17.40696 -10.41729,-1.29853 -36.95163,-1.32488 -47.14444,-0.0468 -14.69348,1.8424 -33.18484,9.12872 -45.56324,17.9537 -12.93204,9.2197 -25.66047,25.77288 -31.79937,41.35474 -7.16229,18.17943 -9.92028,43.1928 -7.32689,66.45049 4.10667,36.82893 22.48326,65.3061 51.58653,79.94076 9.24572,4.64923 22.25887,8.94527 31.82669,10.50697 3.95074,0.64484 7.83771,1.32847 8.63771,1.51916 0.8,0.19069 9.52727,0.18256 19.39393,-0.018 13.41419,-0.27278 20.01854,-0.84895 26.18182,-2.28416 z m -44.83689,-40.82953 c -18.11264,-5.79016 -30.87406,-22.98133 -34.68839,-46.72949 -1.8061,-11.24483 -0.79661,-38.06028 1.79475,-47.67445 5.44571,-20.20407 16.91019,-33.52927 33.21268,-38.60317 7.11701,-2.21507 21.26539,-2.45421 28.66312,-0.48449 16.53314,4.40212 29.69465,19.57814 35.40939,40.82916 1.78965,6.65507 2.08613,10.37602 2.08613,26.18182 0,15.8058 -0.29648,19.52675 -2.08613,26.18182 -4.13751,15.38592 -13.96131,30.09487 -24.04749,36.00576 -10.68669,6.26282 -28.31445,8.1386 -40.34406,4.29304 z m 760.47321,42.17172 c 22.2179,-3.36887 40.6876,-11.88413 51.7918,-23.87805 10.8457,-11.71461 17.0368,-25.77698 18.9652,-43.07732 0.7226,-6.48288 0.9872,-32.51702 0.7983,-78.54546 l -0.2825,-68.84848 h -27.6364 -27.6364 l -0.5656,72.24242 c -0.3688,47.09068 -0.9305,73.5371 -1.6135,75.96107 -3.9575,14.04628 -10.2369,21.00624 -22.0503,24.44051 -8.4042,2.44316 -27.2747,1.65772 -34.2233,-1.42445 -6.7291,-2.98481 -12.9608,-9.96175 -15.8757,-17.77439 l -2.2577,-6.05122 -0.2819,-73.17318 c -0.2169,-56.24973 -0.5556,-73.34695 -1.4646,-73.92454 -1.5986,-1.01573 -53.2122,-0.96316 -54.8191,0.0559 -1.0379,0.65824 -1.2022,14.39022 -0.89,74.40939 0.342,65.73866 0.5637,74.3792 2.0759,80.87492 3.5748,15.35594 9.3106,26.01839 19.5527,36.34648 10.5928,10.68176 27.9825,18.75849 46.9586,21.8102 4,0.64328 7.9273,1.29784 8.7273,1.45458 4.7043,0.92171 32.813,0.30173 40.7272,-0.89831 z m 623.5152,-1.92207 c 4,-0.86245 8.0363,-1.80444 8.9697,-2.09332 1.5362,-0.47547 1.6969,-2.22757 1.6969,-18.49691 v -17.97169 l -4.1212,0.4628 c -2.2666,0.25454 -6.5212,1.16603 -9.4545,2.02553 -6.8336,2.00231 -18.3465,2.04943 -23.026,0.0943 -4.8086,-2.00915 -6.9711,-4.07664 -9.0897,-8.69029 -1.6309,-3.55171 -1.7829,-7.08681 -1.8024,-41.92215 l -0.021,-38.04336 23.5151,-0.25967 23.5152,-0.25966 0.2643,-17.69697 0.2643,-17.69697 h -23.7794 -23.7795 v -22.30303 -22.30303 h -26.1818 -26.1819 v 22.30303 22.30303 h -10.6666 -10.6667 v 17.93939 17.93939 h 10.6667 10.6666 v 42.99641 c 0,39.82936 0.143,43.55522 1.9404,50.5831 2.343,9.16107 5.2267,14.31106 10.9856,19.6195 6.7338,6.20692 15.1353,10.03472 27.3165,12.44546 9.0922,1.79943 38.8503,1.20705 48.9697,-0.9748 z m -1664.73349,-72.37625 0.24864,-71.82782 3.80613,6.61569 c 2.09337,3.63863 9.77647,16.21568 17.07353,27.94902 19.59843,31.5133 37.39168,60.33325 52.08554,84.36363 7.17458,11.73334 13.72997,22.10385 14.56752,23.04559 1.39583,1.56948 3.71257,1.69077 27.78292,1.45454 l 26.26012,-0.2577 V 227.39394 121.69697 h -25.21212 -25.21212 l -0.48485,59.06028 -0.48485,59.06027 -11.07109,-17.3633 c -6.08909,-9.54982 -16.19754,-25.51457 -22.46321,-35.47724 -6.26568,-9.96266 -13.10592,-20.65357 -15.20054,-23.75758 -2.09463,-3.104 -8.73689,-13.49819 -14.76057,-23.09819 -6.02369,-9.6 -11.43782,-17.77514 -12.0314,-18.16697 -1.29258,-0.85325 -62.79792,-0.99852 -64.99994,-0.15352 -1.38561,0.5317 -1.53385,10.73929 -1.53385,105.61616 0,83.11474 0.25289,105.12961 1.21212,105.51667 0.66667,0.269 12.22751,0.52354 25.69075,0.56565 l 24.47864,0.0766 0.24863,-71.8278 z m 505.7143,32.79749 0.25356,-38.54545 11.86765,9.1e-4 11.86767,9.1e-4 6.78788,9.29638 c 3.73333,5.11301 16.6127,22.45805 28.62082,38.54454 l 21.83293,29.24817 32.89334,0.25554 c 18.09133,0.14055 33.25019,-0.10131 33.68635,-0.53747 0.43616,-0.43616 -3.46339,-6.26775 -8.66567,-12.95908 -5.20228,-6.69134 -14.00645,-18.01311 -19.56483,-25.1595 -5.55838,-7.14638 -14.28982,-18.22979 -19.4032,-24.62979 -12.77351,-15.98759 -20.79763,-26.64006 -20.33383,-26.99435 0.21375,-0.16328 2.44064,-1.47169 4.94865,-2.90758 7.97533,-4.56605 19.10369,-14.08634 23.59126,-20.18226 8.7198,-11.84502 11.48122,-21.36892 11.48554,-39.61278 0.003,-11.08928 -0.3299,-14.03784 -2.17481,-19.28395 -4.80088,-13.65164 -14.10165,-23.61849 -28.60881,-30.65767 -10.3621,-5.02791 -17.34075,-6.77837 -32.61077,-8.17982 -11.70271,-1.07404 -108.30091,-1.45841 -110.95099,-0.44148 -1.38561,0.5317 -1.53386,10.73929 -1.53386,105.61616 0,83.11055 0.25295,105.13127 1.21212,105.52451 0.66667,0.27333 13.21212,0.41878 27.87879,0.32324 l 26.66667,-0.17372 z m 0.2313,-105.93939 V 160 l 6.54546,0.0446 c 3.6,0.0245 13.32004,0.39707 21.60009,0.82785 17.03782,0.8864 21.96982,2.37859 28.32417,8.56953 4.69528,4.57452 6.01472,8.65319 5.93118,18.33438 -0.0833,9.65661 -2.35634,15.02521 -8.741,20.64521 -7.29445,6.42083 -18.46325,8.76872 -41.78111,8.78317 l -11.87879,0.007 z m 271.0303,143.98635 c 27.49946,-2.25133 45.64936,-7.90667 62.84073,-19.58062 12.87816,-8.74502 27.22626,-26.71518 33.64906,-42.1433 13.702,-32.91371 10.303,-75.7766 -8.2138,-103.58008 -16.0822,-24.14779 -37.81994,-37.2409 -71.87395,-43.29138 -11.95106,-2.12337 -14.78284,-2.22675 -61.9778,-2.26255 l -49.45454,-0.0375 -0.24975,104.72727 c -0.13737,57.6 -0.042,105.27273 0.21198,105.9394 0.57774,1.51659 77.08869,1.70071 95.06807,0.22877 z M 895.03028,227.41166 v -65.54449 l 16.72728,0.62003 c 9.2,0.34102 19.78182,1.22173 23.51515,1.95712 14.07104,2.77174 30.04894,13.26974 37.18371,24.43092 1.61008,2.51862 4.11888,8.07021 5.57527,12.33688 2.29702,6.72925 2.70652,9.70044 3.08916,22.41438 0.65494,21.75559 -2.48077,34.69087 -11.19845,46.19519 -7.72544,10.19499 -23.31129,19.11451 -36.69037,20.9973 -3.67762,0.51753 -13.7775,1.21012 -22.44417,1.53907 l -15.75758,0.59809 z m 477.49642,105.5755 c 1.3744,-0.5274 1.5339,-6.45993 1.5339,-57.0592 v -56.47061 l 7.5151,-3.50648 c 15.9407,-7.43769 34.5196,-6.80367 41.4343,1.41397 5.5397,6.58356 5.7097,8.37184 6.094,64.08672 l 0.3527,51.14853 2.1201,0.51829 c 1.1661,0.28507 13.0292,0.39551 26.3626,0.24542 l 24.2424,-0.27289 v -59.15152 c 0,-58.88769 -0.01,-59.18597 -2.236,-66.87504 -5.8955,-20.36392 -17.8739,-32.53284 -36.2995,-36.87713 -8.9973,-2.12133 -25.8878,-1.89236 -35.1499,0.47649 -8.3269,2.12966 -20.5171,8.20601 -28.928,14.41951 l -5.4263,4.00859 -0.2831,-7.51561 -0.2833,-7.51559 -25.9394,-0.25826 -25.9394,-0.25827 v 80.01584 80.01584 h 24.648 c 13.5564,0 25.3382,-0.26487 26.1818,-0.5886 z" id="path38585" />
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    <p>Hanne Moa – hanne.moa@sikt.no</p>
+                </div>
+                <nav>
+                    <div class="next"></div>
+                    <div class="last"></div>
+                </nav>
+            </section>
+        </main>
+        <script>
+  /*
+let currentSection = 0;
+const totalSections = document.querySelectorAll('section').length;
+
+    function handleScroll(event) {
+      console.error('here!');
+      // Normalize wheel delta across different browsers
+      const delta = event.wheelDelta || -event.deltaY || -event.detail;
+
+      if (delta > 0 && currentSection > 0) {
+        currentSection--;
+      } else if (delta < 0 && currentSection < totalSections - 1) {
+        currentSection++;
+      }
+
+      scrollToSection(currentSection);
+    }
+
+    function scrollToSection(sectionIndex) {
+      const targetSection = document.querySelectorAll('section')[sectionIndex];
+      window.scrollTo({
+        top: targetSection.offsetTop,
+        behavior: 'instant'
+      });
+    }
+
+    document.addEventListener('wheel', handleScroll);
+    */
+        </script>
+    </body>
+</html>
