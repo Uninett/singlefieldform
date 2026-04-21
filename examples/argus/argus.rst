@@ -10,7 +10,7 @@ Usage on the incident dashboard
 
 The areas outlined in dark blue: "Per page" and "Timeframe" inherits directly
 from ``argus.htmx.incident.forms.base.IncidentListForm`` and uses GET in order
-to be bookmarkable.
+to be bookmarkable. They use the same template.
 
 * ``argus.htmx.incident.forms.incident_filters.PageSizeForm``, its selected
   value is stored as a user preference in the database.
@@ -19,6 +19,10 @@ to be bookmarkable.
 
 The dropdown "Updating every" is not a single field form (yet?), uses POST, and
 stores its selected value as a user preference in the database.
+
+We use a single field form
+``argus.htmx.incident.forms.incident_filters.PageNumberForm`` to validate page
+numbers, even though we never render the form anywhere.
 
 Tne areas outlined in purple: "Severity level", "Description" and "Ticket"
 mixes in ``argus.htmx.incident.forms.base.SearchMixin`` with
