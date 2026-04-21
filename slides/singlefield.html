@@ -74,7 +74,8 @@ main section {
   justify-content: space-between;
   display: flex;
   flex-direction: row;
-  break-after: always;
+  break-after: page;
+  page-break-after: always;
 }
 div.horizontal {
   display: flex;
@@ -160,13 +161,15 @@ dl {
   body {
     font-size: 1.2rem;
   }
+@media print {
+  body {
+    font-size: 1.2em;
+  }
 }
-@media print
-{
-    nav
-    {
-        display: none !important;
-    }
+@page {
+    size: landscape;
+    margin-left: 10%;
+    margin-right: 10%;
 }
         </style>
     </head>
